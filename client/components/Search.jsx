@@ -1,6 +1,6 @@
 import React from 'react';
-import SearchBar from './SearchBar';
-import ResultsList from './ResultsList';
+import SearchBar from './SearchBar.jsx';
+import ResultsList from './ResultsList.jsx';
 
 class Search extends React.Component {
 
@@ -134,4 +134,4 @@ class Search extends React.Component {
   };
 };
 
-window.Search = Search;
+export default Search;

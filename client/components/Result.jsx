@@ -19,4 +19,4 @@ class Result extends React.Component {
 	}
 }
 
-window.Result = Result;
+export default Result;

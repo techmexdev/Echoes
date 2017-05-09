@@ -4,6 +4,7 @@
   "description": "A listening journal app build on React, PostgreSQL, Express, and Node.",
   "main": "index.js",
   "scripts": {
+    "webpack": "webpack --watch",
     "start": "nodemon server/server.js ",
     "build": "babel . --watch --out-dir compiled --presets=es2015,react --ignore=node_modules,compiled --source-maps inline"
   },
@@ -19,9 +20,13 @@
   "homepage": "https://github.com/Corgi-cat/echoes#readme",
   "devDependencies": {
     "babel-cli": "^6.23.0",
-    "babel-preset-react": "^6.23.0",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
     "chai": "^3.5.0",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "webpack": "^2.5.1"
   },
   "dependencies": {
     "babel-preset-es2015": "^6.22.0",
@@ -40,7 +45,7 @@
     "nodemon": "^1.11.0",
     "path": "^0.12.7",
     "pg": "^6.1.4",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
   }
 }

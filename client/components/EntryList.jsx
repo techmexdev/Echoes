@@ -1,5 +1,5 @@
 import React from 'react';
-import Entry from './Entry';
+import Entry from './Entry.jsx';
 
 class EntryList extends React.Component {
   constructor (props) {
@@ -43,4 +43,4 @@ class EntryList extends React.Component {
   }
 };
 
-window.EntryList = EntryList;
+export default EntryList;
