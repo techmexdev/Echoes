@@ -1,3 +1,6 @@
+import React from 'react';
+import Search from './Search';
+import EntryList from './EntryList';
 class App extends React.Component {
   constructor (props) {
     super (props);

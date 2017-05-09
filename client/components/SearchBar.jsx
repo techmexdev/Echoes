@@ -1,3 +1,5 @@
+import React from 'react';
+
 // Searches iTunes
 class SearchBar extends React.Component {
 

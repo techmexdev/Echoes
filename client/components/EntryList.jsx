@@ -1,3 +1,6 @@
+import React from 'react';
+import Entry from './Entry';
+
 class EntryList extends React.Component {
   constructor (props) {
     super (props)
