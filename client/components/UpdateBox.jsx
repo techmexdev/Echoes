@@ -1,3 +1,5 @@
+import React from 'react';
+
 class UpdateBox extends React.Component {
   constructor (props) {
     super(props);

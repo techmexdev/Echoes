@@ -1,3 +1,6 @@
+import React from 'react';
+import Result from './Result';
+
 // Component generatees each search result entry
 class ResultsList extends React.Component {
 	constructor(props){

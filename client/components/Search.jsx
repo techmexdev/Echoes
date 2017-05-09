@@ -1,3 +1,7 @@
+import React from 'react';
+import SearchBar from './SearchBar';
+import ResultsList from './ResultsList';
+
 class Search extends React.Component {
 
 	constructor(props){
