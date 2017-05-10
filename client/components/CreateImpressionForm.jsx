@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import AlbumSelect from './AlbumSelect.jsx';
-import ImpressionCreate from './ImpressionCreate.jsx';
-import RatingCreate from './RatingCreate.jsx';
+import RaisedButton from 'material-ui/RaisedButton';
+
+// import ImpressionCreate from './ImpressionCreate.jsx';
+// import RatingCreate from './RatingCreate.jsx';
 import moment from 'moment';
 import $ from 'jquery';
 
@@ -16,16 +18,18 @@ export default class CreateImpressionForm extends Component {
     super(props);
     this.state = {
       albumQuery: '',
-      searchResults: '',
-      displayForm: 'none',
+      searchResults: [],
+      currForm: 'none',
       album: '',
       impression: '',
       rating: 0
     }
   }
 
-	handleStateChange(state, value) {
-		this.setState({ [state]: value });
+	handleStateChange(state, value, callback = ()=> {}) {
+		this.setState({ [state]: value }, () => {
+			callback();
+		});
 	}
 
   iTunesSearch (term) {
@@ -43,7 +47,7 @@ export default class CreateImpressionForm extends Component {
 			type: 'GET',
 			dataType: 'jsonp',
 			success: (data) => {
-				console.log('Album search results: ', data);
+				console.log('Album search results: ', data.results);
 				// changes state of results, triggering view change
 				this.setState({searchResults: data.results});
 			},
@@ -92,16 +96,19 @@ export default class CreateImpressionForm extends Component {
   componentWillMount() {
     let todayDate = new Date();
 		this.setState({
-			selectedListenDate: moment(todayDate).format('YYYY-MM-DD');
+			selectedListenDate: moment(todayDate).format('YYYY-MM-DD')
 		});
 	}
 
   render() {
     return(
       <div>
-				<AlumSelect handleStateChange={this.handleStateChange.bind(this)} />
-				<ImpressionCreate handleStateChange={this.handleStateChange.bind(this)} />
-				<RatingCreate handleStateChange={this.handleStateChange.bind(this)} />
+				<RaisedButton label="Dialog"
+					onTouchTap={() => { this.setState({currForm: 'AlbumSelect'}); } } />
+				<AlbumSelect handleStateChange={this.handleStateChange.bind(this)} currForm={this.state.currForm}
+					iTunesSearch={this.iTunesSearch.bind(this)} searchResults={this.state.searchResults}/>
+				{/* <ImpressionCreate handleStateChange={this.handleStateChange.bind(this)} currForm={this.state.currForm} />
+				<RatingCreate handleStateChange={this.handleStateChange.bind(this)} currForm={this.state.currForm} /> */}
       </div>
     );
   }
