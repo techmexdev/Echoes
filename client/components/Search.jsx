@@ -78,7 +78,7 @@ class Search extends React.Component {
 				contentType: 'application/json',
 				data: JSON.stringify(newEntry),
 				success: (results) => {
-					console.log('SUCCESS!')
+					console.log('SUCCESS!', results)
 					// assigns current date to state
 					// clears previously set state
 					var date = this.setDate();
@@ -88,6 +88,7 @@ class Search extends React.Component {
 						selectedListenDate: date
 					});
           // gets user entries from db and rerenders entry list
+					console.log('calling getUserEntries from search.jsx')
 					this.props.getUserEntries();
 					// clear the search bar
 					$('.search-bar').val('');

@@ -77,7 +77,7 @@ router.post('/', function (req, res) {
                               date: date,
                               album_impression_id: impressId
                             }).then(function() {
-                              res.status(201).send('Successful Post!');
+                              res.status(201).send('Successful PostA!');
                             })
                             .catch(function (err) {
                               console.log('Problem with inserting listen_date #1');
@@ -103,7 +103,7 @@ router.post('/', function (req, res) {
                           'date': date,
                           'album_impression_id': impressId
                         }).then(function() {
-                          res.status(201).send('Successful Post!');
+                          res.status(201).send('Successful PostB!');
                         })
                         .catch(function (err) {
                           console.log('Problem with inserting listen_date #2');
@@ -155,7 +155,7 @@ router.post('/', function (req, res) {
                             'date': date,
                             'album_impression_id': impressId})
                           .then(function() {
-                            res.status(201).send('Successful Post!');
+                            res.status(201).send('Successful PostC!');
                           })
                           .catch(function (err) {
                             console.log('Problem with inserting listen_date #3');
@@ -217,7 +217,7 @@ router.post('/', function (req, res) {
                     knex('listen_date').insert({'date': date,
                       'album_impression_id': impressId})
                       .then(function() {
-                        res.status(201).send('Successful Post!');
+                        res.status(201).send('Successful PostD!');
                       })
                       .catch(function (err) {
                         console.log('Problem with inserting listen_date #4');

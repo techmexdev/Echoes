@@ -20,16 +20,23 @@ class App extends React.Component {
   }
 
   getUserEntries () {
+    console.log('getUserEntries called')
+    var app = this;
     $.ajax({
       url: '/querydb',
       type: 'GET',
       success: (response) => {
         // sets state of all entries
         // sets current user name
+        console.log('get User entries: ', response)
         if (response.length) {
-          this.setState({
+          app.setState({
             allEntries: response,
             currentUser: response[0].user
+          })
+        } else {
+          app.setState({
+            allEntries: response
           })
         }
       },
@@ -60,7 +67,8 @@ class App extends React.Component {
         date: date
       },
       success: function (response) {
-        console.log(response);
+        //console.log(response);
+        console.log('deleting user entries')
         callback();
       },
       error: function (error) {
@@ -71,6 +79,7 @@ class App extends React.Component {
   }
   // updates a user entry
   updateUserEntries (id, rating, impression, callback) {
+    var app = this;
     $.ajax({
       url:'/querydb/update',
       type:'POST',
@@ -92,6 +101,7 @@ class App extends React.Component {
 
   // renders the app to the DOM
   render () {
+    console.log('rendering app')
     return (
       <MuiThemeProvider>
       <div>
