@@ -163,6 +163,7 @@ class App extends React.Component {
                 handleSortByLowest={this.toggleSortLowest}
                 disableSorts={this.disableSorts}
               />
+              <Search getUserEntries={this.getUserEntries}/>
             </div>
             <div className="col-md-10">
               <EntryList
