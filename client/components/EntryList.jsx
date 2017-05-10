@@ -7,6 +7,7 @@ class EntryList extends React.Component {
     super (props);
     this.state = {
       currPage: 1,
+      sortByRating: false,
     };
     this.handleSelect = this.handleSelect.bind(this);
   }
@@ -18,6 +19,7 @@ class EntryList extends React.Component {
     let numItems = 10;
     let totalPages = Math.ceil(this.props.allEntries.length / 10);
     let allEntryData = this.props.allEntries.slice();
+
     let showNumEntries;
     if (this.state.currPage === 1) {
       showNumEntries = allEntryData.slice(0, numItems);

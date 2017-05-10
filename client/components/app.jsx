@@ -1,9 +1,12 @@
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-require("react-tap-event-plugin")();
-
+import injectTapEventPlugin from "react-tap-event-plugin";
+import SortEntries from './SortEntries.jsx'
 import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';
+
+injectTapEventPlugin();
+
 class App extends React.Component {
   constructor (props) {
     super (props);
@@ -13,8 +16,15 @@ class App extends React.Component {
       allEntries: [],
       searchResults: [],
       currentUser: '',
+      sortByRatingHighest: false,
+      sortByRatingLowest: false,
     };
-
+    // Bindings
+    this.getUserEntries = this.getUserEntries.bind(this);
+    this.deleteUserEntries = this.deleteUserEntries.bind(this);
+    this.toggleSortLowest = this.toggleSortLowest.bind(this);
+    this.toggleSortHighest = this.toggleSortHighest.bind(this);
+    this.updateUserEntries = this.updateUserEntries.bind(this);
   }
   // when the component loads successfully
   componentWillMount () {
@@ -22,6 +32,26 @@ class App extends React.Component {
     this.getUserEntries();
   }
 
+  // deletes a listening instance from the db
+  deleteUserEntries (id, date, callback) {
+    $.ajax({
+      url:'/querydb/delete',
+      type:'POST',
+      data: {
+        impressionId: id,
+        date: date
+      },
+      success: function (response) {
+        //console.log(response);
+        console.log('deleting user entries')
+        callback();
+      },
+      error: function (error) {
+        console.log(error);
+        throw error;
+      }
+    })
+  }
   getUserEntries () {
     console.log('getUserEntries called')
     var app = this;
@@ -60,27 +90,18 @@ class App extends React.Component {
       return `Hello!`
     }
   }
-  // deletes a listening instance from the db
-  deleteUserEntries (id, date, callback) {
-    $.ajax({
-      url:'/querydb/delete',
-      type:'POST',
-      data: {
-        impressionId: id,
-        date: date
-      },
-      success: function (response) {
-        //console.log(response);
-        console.log('deleting user entries')
-        callback();
-      },
-      error: function (error) {
-        console.log(error);
-        throw error;
-      }
-    })
+
+  toggleSortHighest() {
+    this.setState({
+      sortByRatingHighest: !this.state.sortByRatingHighest,
+    });
   }
 
+  toggleSortLowest() {
+    this.setState({
+      sortByRatingLowest: !this.state.sortByRatingLowest,
+    });
+  }
   // updates a user entry
   updateUserEntries (id, rating, impression, callback) {
     var app = this;
@@ -118,16 +139,19 @@ class App extends React.Component {
             </a>
             <img className='navbar-center header logo' src="styles/logo.svg"></img>
           </header>
-          <div  className="col-md-2 search">
-            <Search getUserEntries={this.getUserEntries.bind(this)}/>
+          <div  className="col-md-2 sort">
+            <SortEntries handleSortByHighest={this.toggleSortHighest} handleSortByLowest={this.toggleSortLowest} />
           </div>
           <div className="col-md-10">
-            <EntryList allEntries={this.state.allEntries}
-              updateUserEntries={this.updateUserEntries.bind(this)}
-              getUserEntries={this.getUserEntries.bind(this)}
-              deleteUserEntries={this.deleteUserEntries.bind(this)}/>
+            <EntryList
+              allEntries={this.state.allEntries}
+              sortByRatingLowest={this.state.sortByRatingLowest}
+              sortByRatingHighest={this.state.sortByRatingHighest}
+              updateUserEntries={this.updateUserEntries}
+              getUserEntries={this.getUserEntries}
+              deleteUserEntries={this.deleteUserEntries}
+            />
           </div>
-
         </div>
       </div>
      </MuiThemeProvider>
