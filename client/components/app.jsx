@@ -155,7 +155,7 @@ class App extends React.Component {
               </a>
               <img className='navbar-center header logo' src="styles/logo.svg"></img>
             </header>
-            <div  className="col-md-2 search">
+            <div className="col-md-2 search">
               <SortEntries
                 handleSortByAlbum={this.toggleSortAlbum}
                 handleSortByArtist={this.toggleSortArtist}

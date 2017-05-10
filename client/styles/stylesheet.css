@@ -251,7 +251,7 @@ h2.greeting {
 }
 
 .rating {
-  text-align:center;
+	vertical-align: middle;
 }
 
 .entry {
@@ -395,7 +395,6 @@ table tr.entry:hover {
 	  z-index: 2;
 	}
 }
-
 
 td {
 	vertical-align: middle;

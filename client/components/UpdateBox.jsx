@@ -68,7 +68,7 @@ class UpdateBox extends React.Component {
     });
   }
 
-  render () {
+  render() {
       return (
         // td
         <td className='col-md-3'>
@@ -118,7 +118,7 @@ class UpdateBox extends React.Component {
             <div className='update'>
 
               {/* remove icon */}
-              <span className='close glyphicon glyphicon-remove' onClick={this.closeModals.bind}></span>
+              <span className='close glyphicon glyphicon-remove' onClick={this.closeModals}></span>
 
               <form id='update' onSubmit={this.handleSubmit}>
                 {/* impression box */}
@@ -136,7 +136,7 @@ class UpdateBox extends React.Component {
                 <div>
                   <Rating
                   value={+this.state.rating}
-                  max={10}
+                  max={5}
                   onChange={(value) => {
                     this.setState({
                       rating: value
