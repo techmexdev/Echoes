@@ -16,12 +16,17 @@ class App extends React.Component {
       allEntries: [],
       searchResults: [],
       currentUser: '',
+      sortByAlbum: false,
+      sortByArtist: false,
       sortByRatingHighest: false,
       sortByRatingLowest: false,
     };
     // Bindings
-    this.getUserEntries = this.getUserEntries.bind(this);
+    this.disableSorts = this.disableSorts.bind(this);
     this.deleteUserEntries = this.deleteUserEntries.bind(this);
+    this.getUserEntries = this.getUserEntries.bind(this);
+    this.toggleSortAlbum = this.toggleSortAlbum.bind(this);
+    this.toggleSortArtist = this.toggleSortArtist.bind(this);
     this.toggleSortLowest = this.toggleSortLowest.bind(this);
     this.toggleSortHighest = this.toggleSortHighest.bind(this);
     this.updateUserEntries = this.updateUserEntries.bind(this);
@@ -32,6 +37,14 @@ class App extends React.Component {
     this.getUserEntries();
   }
 
+  disableSorts(){
+    this.setState({
+      sortByAlbum: false,
+      sortByArtist: false,
+      sortByRatingLowest: false,
+      sortByRatingHighest: false,
+    })
+  }
   // deletes a listening instance from the db
   deleteUserEntries (id, date, callback) {
     $.ajax({
@@ -42,18 +55,14 @@ class App extends React.Component {
         date: date
       },
       success: function (response) {
-        //console.log(response);
-        console.log('deleting user entries')
         callback();
       },
       error: function (error) {
-        console.log(error);
         throw error;
       }
     })
   }
   getUserEntries () {
-    console.log('getUserEntries called')
     var app = this;
     $.ajax({
       url: '/querydb',
@@ -61,7 +70,6 @@ class App extends React.Component {
       success: (response) => {
         // sets state of all entries
         // sets current user name
-        console.log('get User entries: ', response)
         if (response.length) {
           app.setState({
             allEntries: response,
@@ -74,7 +82,6 @@ class App extends React.Component {
         }
       },
       error: function (error) {
-        console.log(error);
         throw error;
       }
     })
@@ -91,21 +98,31 @@ class App extends React.Component {
     }
   }
 
+  toggleSortAlbum() {
+    this.setState({
+      sortByAlbum: !this.sortByAlbum,
+    });
+  }
+
+  toggleSortArtist() {
+    this.setState({
+      sortByArtist: !this.sortByArtist,
+    });
+  }
+
   toggleSortHighest() {
     this.setState({
       sortByRatingHighest: !this.state.sortByRatingHighest,
-      sortByRatingLowest: false,
     });
   }
 
   toggleSortLowest() {
     this.setState({
       sortByRatingLowest: !this.state.sortByRatingLowest,
-      sortRatingByHighest: false,
     });
   }
   // updates a user entry
-  updateUserEntries (id, rating, impression, callback) {
+  updateUserEntries(id, rating, impression, callback) {
     var app = this;
     $.ajax({
       url:'/querydb/update',
@@ -119,7 +136,6 @@ class App extends React.Component {
          callback();
       },
       error: function (error) {
-        console.log(error);
         throw error;
       }
     })
@@ -127,9 +143,7 @@ class App extends React.Component {
 
 
   // renders the app to the DOM
-  render () {
-    console.log('rendering app');
-
+  render() {
     return (
       <MuiThemeProvider>
         <div>
@@ -142,11 +156,19 @@ class App extends React.Component {
               <img className='navbar-center header logo' src="styles/logo.svg"></img>
             </header>
             <div  className="col-md-2 search">
-              <SortEntries handleSortByHighest={this.toggleSortHighest} handleSortByLowest={this.toggleSortLowest} />
+              <SortEntries
+                handleSortByAlbum={this.toggleSortAlbum}
+                handleSortByArtist={this.toggleSortArtist}
+                handleSortByHighest={this.toggleSortHighest}
+                handleSortByLowest={this.toggleSortLowest}
+                disableSorts={this.disableSorts}
+              />
             </div>
             <div className="col-md-10">
               <EntryList
                 allEntries={this.state.allEntries}
+                sortByAlbum={this.state.sortByAlbum}
+                sortByArtist={this.state.sortByArtist}
                 sortByRatingLowest={this.state.sortByRatingLowest}
                 sortByRatingHighest={this.state.sortByRatingHighest}
                 updateUserEntries={this.updateUserEntries}
