@@ -1,0 +1,14 @@
+<Dialog
+                  title="Confirm Removal"
+                  actions={[
+                    <FlatButton label="Cancel" primary={true} 
+                      onTouchTap={this.closeModals.bind(this)} />,
+                    <FlatButton label="Continue" primary={true} keyboardFocused={true} 
+                      onTouchTap={this.handleDelete.bind(this)} />
+                  ]}
+                  modal={false}
+                  open={this.state.confirmDeletionModalActive}
+                  onRequestClose={this.closeModals.bind(this)}
+                >
+                  Confirm the deletion of this album
+                </Dialog>

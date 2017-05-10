@@ -1,4 +1,7 @@
+  
 import React from 'react';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 
 class UpdateBox extends React.Component {
   constructor (props) {
@@ -6,7 +9,8 @@ class UpdateBox extends React.Component {
     this.state = {
       modalActive:false,
       rating: '',
-      impression: ''
+      impression: '',
+      confirmDeletionModalActive: false
     };
   }
 
@@ -16,8 +20,8 @@ class UpdateBox extends React.Component {
   }
 
   //hide updateBox
-  closeModal () {
-    this.setState({modalActive:false})
+  closeModals () {
+    this.setState({modalActive:false, confirmDeletionModalActive: false});
   }
 
   // handles all form value changes
@@ -35,21 +39,48 @@ class UpdateBox extends React.Component {
   handleSubmit (e) {
     e.preventDefault();
     this.props.updateUserEntries(this.props.impressionId, this.state.rating, this.state.impression, this.props.getUserEntries);
-    this.closeModal();
+    this.closeModals();
   }
 
   // handles deleting whole entry from the database
   handleDelete(e) {
     e.preventDefault();
     this.props.deleteUserEntries(this.props.impressionId, this.props.date, this.props.getUserEntries);
-    this.closeModal();
+    this.closeModals();
   }
-
+  
+  handleClickToDelete(e) {
+    e.preventDefault();
+    this.setState({confirmDeletionModalActive: true});
+  }
 
   render () {
       return (
         // td
         <td className='col-md-3'>
+          {
+            this.state.confirmDeletionModalActive && 
+            
+            (  
+              <Dialog
+                  title="Confirm Removal"
+                  actions={[
+                    <FlatButton label="Cancel" primary={true} 
+                      onClick={this.closeModals.bind(this)} />,
+                    <FlatButton label="Continue" primary={true} keyboardFocused={true} 
+                      onClick={this.handleDelete.bind(this)} />
+                  ]}
+                  modal={false}
+                  open={this.state.confirmDeletionModalActive}
+                  onRequestClose={this.closeModals.bind(this)}
+                >
+                  Confirm the deletion of this album
+                </Dialog>
+              
+             
+            )
+          }
+        
           {!this.state.modalActive && (
             <div className='btn-group' role="group">
               {/* update button -- do not remove a tags.
@@ -61,7 +92,7 @@ class UpdateBox extends React.Component {
                 </button>
               </a>
               {/*  delete button */}
-              <a onClick={this.handleDelete.bind(this)}>
+              <a onClick={this.handleClickToDelete.bind(this)}>
                 <button className='remove btn btn-default'>
                   {/* remove button */}
                   <span className='glyphicon glyphicon-remove-circle'></span>
@@ -72,7 +103,7 @@ class UpdateBox extends React.Component {
           {this.state.modalActive && (
             <div className='update'>
               {/* remove icon */}
-              <span className='close glyphicon glyphicon-remove' onClick={this.closeModal.bind(this)}></span>
+              <span className='close glyphicon glyphicon-remove' onClick={this.closeModals.bind(this)}></span>
               <form id='update' onSubmit={this.handleSubmit.bind(this)}>
                 {/* impression box */}
                 <textarea className='form-control' id='impression' name='impression'

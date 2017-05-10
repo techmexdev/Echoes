@@ -1,6 +1,7 @@
 import React from 'react';
 import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 class App extends React.Component {
   constructor (props) {
     super (props);
@@ -92,7 +93,7 @@ class App extends React.Component {
   // renders the app to the DOM
   render () {
     return (
-
+      <MuiThemeProvider>
       <div>
         <div className="container-fluid app">
           <header className="navbar">
@@ -116,6 +117,7 @@ class App extends React.Component {
           </div>
 
       </div>
+     </MuiThemeProvider>
     )
   }
 }
