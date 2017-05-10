@@ -42,7 +42,7 @@ router.post('/', function (req, res) {
                // if password is incorrect
              } else {
                // send error
-               res.status(401).redirect('/signin');
+               res.status(401).send();
              }
            }
          });

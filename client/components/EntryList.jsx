@@ -7,18 +7,57 @@ class EntryList extends React.Component {
     super (props);
     this.state = {
       currPage: 1,
+      sortByRating: false,
     };
     this.handleSelect = this.handleSelect.bind(this);
   }
   handleSelect(number) {
-    console.log('handle select', number);
-    this.setState({ currPage: number });
+    this.setState({
+      currPage: number,
+    });
   }
   render () {
+    let allEntryData = this.props.allEntries.slice();
+
+    // handle sorting:
+    if (this.props.sortByAlbum) {
+      allEntryData.sort((a, b) => {
+        let titleA = a.title.toUpperCase();
+        let titleB = b.title.toUpperCase();
+        if (titleA < titleB) {
+          return -1;
+        }
+        if (titleA > titleB) {
+          return 1;
+        }
+        return 0;
+      });
+    } else if (this.props.sortByArtist) {
+      allEntryData.sort((a, b) => {
+        let nameA = a.name.toUpperCase();
+        let nameB = b.name.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
+    } else if (this.props.sortByRatingLowest) {
+      allEntryData.sort((a, b) => {
+        return a.rating - b.rating;
+      });
+    } else if (this.props.sortByRatingHighest) {
+      allEntryData = allEntryData.sort((a,b) => {
+        return b.rating - a.rating;
+      });
+    }
+
+    // handle pagination, determine which entries to show
+    let showNumEntries;
     let numItems = 10;
     let totalPages = Math.ceil(this.props.allEntries.length / 10);
-    let allEntryData = this.props.allEntries.slice();
-    let showNumEntries;
     if (this.state.currPage === 1) {
       showNumEntries = allEntryData.slice(0, numItems);
     } else {
@@ -34,10 +73,16 @@ class EntryList extends React.Component {
               <th className='col-md-1'>
                 <span className='glyphicon glyphicon-calendar'></span>
               </th>
-              <th className='col-md-1'><h5>Album</h5></th>
+              <th className='col-md-1'>
+                <h5>Album</h5>
+              </th>
               <th className='col-md-2'></th>
-              <th className='impression col-md-4'><h5>Impression</h5></th>
-              <th className='rating col-md-1'><h5>Rating</h5></th>
+              <th className='impression col-md-4'>
+                <h5>Impression</h5>
+              </th>
+              <th className='rating col-md-1'>
+                <h5>Rating</h5>
+              </th>
               <th className='col-md-2'></th>
             </tr>
             {showNumEntries.map((entry) => {

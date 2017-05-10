@@ -1,9 +1,12 @@
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-require("react-tap-event-plugin")();
-
+import injectTapEventPlugin from "react-tap-event-plugin";
+import SortEntries from './SortEntries.jsx'
 import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';
+
+injectTapEventPlugin();
+
 class App extends React.Component {
   constructor (props) {
     super (props);
@@ -13,8 +16,20 @@ class App extends React.Component {
       allEntries: [],
       searchResults: [],
       currentUser: '',
+      sortByAlbum: false,
+      sortByArtist: false,
+      sortByRatingHighest: false,
+      sortByRatingLowest: false,
     };
-
+    // Bindings
+    this.disableSorts = this.disableSorts.bind(this);
+    this.deleteUserEntries = this.deleteUserEntries.bind(this);
+    this.getUserEntries = this.getUserEntries.bind(this);
+    this.toggleSortAlbum = this.toggleSortAlbum.bind(this);
+    this.toggleSortArtist = this.toggleSortArtist.bind(this);
+    this.toggleSortLowest = this.toggleSortLowest.bind(this);
+    this.toggleSortHighest = this.toggleSortHighest.bind(this);
+    this.updateUserEntries = this.updateUserEntries.bind(this);
   }
   // when the component loads successfully
   componentWillMount () {
@@ -22,8 +37,32 @@ class App extends React.Component {
     this.getUserEntries();
   }
 
+  disableSorts(){
+    this.setState({
+      sortByAlbum: false,
+      sortByArtist: false,
+      sortByRatingLowest: false,
+      sortByRatingHighest: false,
+    })
+  }
+  // deletes a listening instance from the db
+  deleteUserEntries (id, date, callback) {
+    $.ajax({
+      url:'/querydb/delete',
+      type:'POST',
+      data: {
+        impressionId: id,
+        date: date
+      },
+      success: function (response) {
+        callback();
+      },
+      error: function (error) {
+        throw error;
+      }
+    })
+  }
   getUserEntries () {
-    console.log('getUserEntries called')
     var app = this;
     $.ajax({
       url: '/querydb',
@@ -31,7 +70,6 @@ class App extends React.Component {
       success: (response) => {
         // sets state of all entries
         // sets current user name
-        console.log('get User entries: ', response)
         if (response.length) {
           app.setState({
             allEntries: response,
@@ -44,7 +82,6 @@ class App extends React.Component {
         }
       },
       error: function (error) {
-        console.log(error);
         throw error;
       }
     })
@@ -60,29 +97,32 @@ class App extends React.Component {
       return `Hello!`
     }
   }
-  // deletes a listening instance from the db
-  deleteUserEntries (id, date, callback) {
-    $.ajax({
-      url:'/querydb/delete',
-      type:'POST',
-      data: {
-        impressionId: id,
-        date: date
-      },
-      success: function (response) {
-        //console.log(response);
-        console.log('deleting user entries')
-        callback();
-      },
-      error: function (error) {
-        console.log(error);
-        throw error;
-      }
-    })
+
+  toggleSortAlbum() {
+    this.setState({
+      sortByAlbum: !this.sortByAlbum,
+    });
   }
 
+  toggleSortArtist() {
+    this.setState({
+      sortByArtist: !this.sortByArtist,
+    });
+  }
+
+  toggleSortHighest() {
+    this.setState({
+      sortByRatingHighest: !this.state.sortByRatingHighest,
+    });
+  }
+
+  toggleSortLowest() {
+    this.setState({
+      sortByRatingLowest: !this.state.sortByRatingLowest,
+    });
+  }
   // updates a user entry
-  updateUserEntries (id, rating, impression, callback) {
+  updateUserEntries(id, rating, impression, callback) {
     var app = this;
     $.ajax({
       url:'/querydb/update',
@@ -96,7 +136,6 @@ class App extends React.Component {
          callback();
       },
       error: function (error) {
-        console.log(error);
         throw error;
       }
     })
@@ -104,32 +143,41 @@ class App extends React.Component {
 
 
   // renders the app to the DOM
-  render () {
-    console.log('rendering app');
-
+  render() {
     return (
       <MuiThemeProvider>
-      <div>
-        <div className="container-fluid app">
-          <header className="navbar">
-            <div><h2 className="greeting">{this.greetUser()}</h2></div>
-            <a href="/signout" className='navbar-right signout'>
-              <button className="btn btn-default landing"><span>Sign Out</span></button>
-            </a>
-            <img className='navbar-center header logo' src="styles/logo.svg"></img>
-          </header>
-          <div  className="col-md-2 search">
-            <Search getUserEntries={this.getUserEntries.bind(this)}/>
+        <div>
+          <div className="container-fluid app">
+            <header className="navbar">
+              <div><h2 className="greeting">{this.greetUser()}</h2></div>
+              <a href="/signout" className='navbar-right signout'>
+                <button className="btn btn-default landing"><span>Sign Out</span></button>
+              </a>
+              <img className='navbar-center header logo' src="styles/logo.svg"></img>
+            </header>
+            <div  className="col-md-2 search">
+              <SortEntries
+                handleSortByAlbum={this.toggleSortAlbum}
+                handleSortByArtist={this.toggleSortArtist}
+                handleSortByHighest={this.toggleSortHighest}
+                handleSortByLowest={this.toggleSortLowest}
+                disableSorts={this.disableSorts}
+              />
+            </div>
+            <div className="col-md-10">
+              <EntryList
+                allEntries={this.state.allEntries}
+                sortByAlbum={this.state.sortByAlbum}
+                sortByArtist={this.state.sortByArtist}
+                sortByRatingLowest={this.state.sortByRatingLowest}
+                sortByRatingHighest={this.state.sortByRatingHighest}
+                updateUserEntries={this.updateUserEntries}
+                getUserEntries={this.getUserEntries}
+                deleteUserEntries={this.deleteUserEntries}
+              />
+            </div>
           </div>
-          <div className="col-md-10">
-            <EntryList allEntries={this.state.allEntries}
-              updateUserEntries={this.updateUserEntries.bind(this)}
-              getUserEntries={this.getUserEntries.bind(this)}
-              deleteUserEntries={this.deleteUserEntries.bind(this)}/>
-          </div>
-
         </div>
-      </div>
      </MuiThemeProvider>
     )
   }

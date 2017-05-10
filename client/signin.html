@@ -12,11 +12,11 @@
 
 <body>
     <div class="form-signin">
-    <form action="/signin" method="POST">
     <br>
      <h1 class='signin'>Sign In</h1>
      <br>
         <fieldset>
+            <div id='error' style='visibility:hidden;color:red;padding-bottom:5px;padding-left:35px'>Wrong username or password</div>
             Username:
             <br>
             <input type="text" class="form-control" name="username" placeholder="Username" required>
@@ -25,14 +25,34 @@
             <br>
             <input type="password" class="form-control" name="password" placeholder="Password" required>
             <br>
-			<input class="btn btn-default" type="submit" value="Sign In">
+            <input class="btn btn-default" onClick='signin()' value="Sign In">
             <br>
             <br>
             <a href="/signup">Create an account</a>
         </fieldset>
-    </form>
     </div>
-
+   
+    <script>
+        var signin = function() {
+            var username = document.getElementsByClassName('form-control')[0].value;
+            var password = document.getElementsByClassName('form-control')[1].value
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", '/signin', true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    if(xhr.status === 200) {
+                        window.location.href = xhr.responseURL; 
+                        
+                    } else {
+                        document.getElementById('error').style.visibility = 'visible';  
+                    }
+                    
+                }
+            }
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({username: username, password: password}));
+        }
+    </script>
 </body>
 
 </html>
