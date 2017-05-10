@@ -1,4 +1,5 @@
 import React from 'react';
+import { Rating } from 'material-ui-rating';
 import UpdateBox from './UpdateBox.jsx';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -146,8 +147,8 @@ class Entry extends React.Component {
         </td>
         <td className='albumInfo col-md-2'>
           <div>
-            <h3>{this.props.title}</h3>
-            <h4>{this.props.artist}</h4>
+            <h4>{this.props.title}</h4>
+            <h5>{this.props.artist}</h5>
             <p>{this.props.year}</p>
             <p>{this.props.genre}</p>
           </div>
@@ -155,7 +156,13 @@ class Entry extends React.Component {
         <td className='impression col-md-4'>
           <div>{this.props.impression}</div>
         </td>
-        <td className='rating col-md-1'><h3>{this.props.rating}</h3></td>
+        <td className='rating col-md-3'>
+          <Rating
+            value={this.props.rating}
+            max={5}
+            readOnly
+          />
+        </td>
         <UpdateBox impressionId={this.props.impressionId}
                    date={this.props.date}
                    impression={this.props.impression}
