@@ -89,7 +89,7 @@ class UpdateBox extends React.Component {
                   onRequestClose={this.closeModals}
                 >
                   Confirm the deletion of this album
-                </Dialog>
+             </Dialog>
 
 
             )
