@@ -1,5 +1,6 @@
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+require("react-tap-event-plugin")();
 
 import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';

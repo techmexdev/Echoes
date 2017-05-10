@@ -2,6 +2,7 @@
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import {Rating} from 'material-ui-rating';
 
 class UpdateBox extends React.Component {
   constructor (props) {
@@ -104,8 +105,10 @@ class UpdateBox extends React.Component {
           )}
           {this.state.modalActive && (
             <div className='update'>
+            
               {/* remove icon */}
               <span className='close glyphicon glyphicon-remove' onClick={this.closeModals.bind(this)}></span>
+              
               <form id='update' onSubmit={this.handleSubmit.bind(this)}>
                 {/* impression box */}
                 <textarea className='form-control' id='impression' name='impression'
@@ -115,23 +118,17 @@ class UpdateBox extends React.Component {
                                           onChange={this.handleInputChange.bind(this)}
                                           placeholder='Write your impression...'></textarea>
                 <br></br>
+                <div> <Rating value={+this.state.rating} max={10} 
+                onChange={(value) => {
+                  console.log(`Rated with value ${value}`); 
+                  this.setState({rating:value});
+                } }/></div>
                 <div className='input-group'>
                   {/* rating dropdown */}
-                  <select className='form-control' name='rating' id='rating' value={this.state.rating} onChange={this.handleInputChange.bind(this)}>
-                    <option value={null}>Rating</option>
-                    <option value={1}>1</option>
-                    <option value={2}>2</option>
-                    <option value={3}>3</option>
-                    <option value={4}>4</option>
-                    <option value={5}>5</option>
-                    <option value={6}>6</option>
-                    <option value={7}>7</option>
-                    <option value={8}>8</option>
-                    <option value={9}>9</option>
-                    <option value={10}>10</option>
-                  </select>
+
                   <span className='input-group-btn'>
-                    <button className='btn btn-default' type='submit' id="submit" name='button' value='Save'></button>
+                    <button className='btn btn-default' type='submit' id="submit" name='button' value='Save'>Submit</button>
+                    <button className='btn btn-default' onClick={this.closeModals.bind(this)}>Cancel</button>
                   </span>
                 </div>
               </form>
