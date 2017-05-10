@@ -1,7 +1,8 @@
 import React from 'react';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 class App extends React.Component {
   constructor (props) {
     super (props);
@@ -10,8 +11,9 @@ class App extends React.Component {
       viewingEntry: '',
       allEntries: [],
       searchResults: [],
-      currentUser: ''
-    }
+      currentUser: '',
+    };
+
   }
   // when the component loads successfully
   componentWillMount () {
@@ -77,6 +79,7 @@ class App extends React.Component {
       }
     })
   }
+
   // updates a user entry
   updateUserEntries (id, rating, impression, callback) {
     var app = this;
@@ -101,7 +104,8 @@ class App extends React.Component {
 
   // renders the app to the DOM
   render () {
-    console.log('rendering app')
+    console.log('rendering app');
+
     return (
       <MuiThemeProvider>
       <div>
@@ -117,15 +121,13 @@ class App extends React.Component {
             <Search getUserEntries={this.getUserEntries.bind(this)}/>
           </div>
           <div className="col-md-10">
-            <table className="table-responsive table">
-              <EntryList allEntries={this.state.allEntries}
-                updateUserEntries={this.updateUserEntries.bind(this)}
-                getUserEntries={this.getUserEntries.bind(this)}
-                deleteUserEntries={this.deleteUserEntries.bind(this)}/>
-              </table>
-            </div>
+            <EntryList allEntries={this.state.allEntries}
+              updateUserEntries={this.updateUserEntries.bind(this)}
+              getUserEntries={this.getUserEntries.bind(this)}
+              deleteUserEntries={this.deleteUserEntries.bind(this)}/>
           </div>
 
+        </div>
       </div>
      </MuiThemeProvider>
     )
