@@ -16,11 +16,22 @@ class EntryList extends React.Component {
     this.setState({ currPage: number });
   }
   render () {
+    let allEntryData = this.props.allEntries.slice();
+    // handle sorting by Ratings
+    if (this.props.sortByRatingLowest) {
+      allEntryData.sort((a, b) => {
+        return a.rating - b.rating;
+      });
+    } else if (this.props.sortByHighest) {
+      allEntryData.sort((a,b) => {
+        return b.rating - a.rating;
+      });
+    }
+
+    // handle pagination, determine which entries to show
+    let showNumEntries;
     let numItems = 10;
     let totalPages = Math.ceil(this.props.allEntries.length / 10);
-    let allEntryData = this.props.allEntries.slice();
-
-    let showNumEntries;
     if (this.state.currPage === 1) {
       showNumEntries = allEntryData.slice(0, numItems);
     } else {

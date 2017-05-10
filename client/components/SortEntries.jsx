@@ -12,7 +12,9 @@ class SortEntries extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {value: 1};
+    this.state = {
+      value: 1,
+    };
   }
 
   handleChange(event, index, value) {

@@ -94,12 +94,14 @@ class App extends React.Component {
   toggleSortHighest() {
     this.setState({
       sortByRatingHighest: !this.state.sortByRatingHighest,
+      sortByRatingLowest: false,
     });
   }
 
   toggleSortLowest() {
     this.setState({
       sortByRatingLowest: !this.state.sortByRatingLowest,
+      sortRatingByHighest: false,
     });
   }
   // updates a user entry
@@ -130,30 +132,30 @@ class App extends React.Component {
 
     return (
       <MuiThemeProvider>
-      <div>
-        <div className="container-fluid app">
-          <header className="navbar">
-            <div><h2 className="greeting">{this.greetUser()}</h2></div>
-            <a href="/signout" className='navbar-right signout'>
-              <button className="btn btn-default landing"><span>Sign Out</span></button>
-            </a>
-            <img className='navbar-center header logo' src="styles/logo.svg"></img>
-          </header>
-          <div  className="col-md-2 sort">
-            <SortEntries handleSortByHighest={this.toggleSortHighest} handleSortByLowest={this.toggleSortLowest} />
-          </div>
-          <div className="col-md-10">
-            <EntryList
-              allEntries={this.state.allEntries}
-              sortByRatingLowest={this.state.sortByRatingLowest}
-              sortByRatingHighest={this.state.sortByRatingHighest}
-              updateUserEntries={this.updateUserEntries}
-              getUserEntries={this.getUserEntries}
-              deleteUserEntries={this.deleteUserEntries}
-            />
+        <div>
+          <div className="container-fluid app">
+            <header className="navbar">
+              <div><h2 className="greeting">{this.greetUser()}</h2></div>
+              <a href="/signout" className='navbar-right signout'>
+                <button className="btn btn-default landing"><span>Sign Out</span></button>
+              </a>
+              <img className='navbar-center header logo' src="styles/logo.svg"></img>
+            </header>
+            <div  className="col-md-2 search">
+              <SortEntries handleSortByHighest={this.toggleSortHighest} handleSortByLowest={this.toggleSortLowest} />
+            </div>
+            <div className="col-md-10">
+              <EntryList
+                allEntries={this.state.allEntries}
+                sortByRatingLowest={this.state.sortByRatingLowest}
+                sortByRatingHighest={this.state.sortByRatingHighest}
+                updateUserEntries={this.updateUserEntries}
+                getUserEntries={this.getUserEntries}
+                deleteUserEntries={this.deleteUserEntries}
+              />
+            </div>
           </div>
         </div>
-      </div>
      </MuiThemeProvider>
     )
   }
