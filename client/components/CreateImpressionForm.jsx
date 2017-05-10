@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import AlbumSelect from './AlbumSelect.jsx';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
-
 import ImpressionCreate from './ImpressionCreate.jsx';
 import RatingCreate from './RatingCreate.jsx';
 import moment from 'moment';
@@ -39,6 +38,26 @@ export default class CreateImpressionForm extends Component {
 		var query = term.split(' ').join('%20');
 		// creates search URL with limit of four results
 		var searchUrl = 'https://itunes.apple.com/search?term=?$' + query + '&entity=album&limit=12';
+=======
+      searchResults: '',
+      displayForm: 'none',
+      album: '',
+      impression: '',
+      rating: 0
+    }
+  }
+
+	handleStateChange(state, value) {
+		this.setState({ [state]: value });
+	}
+
+  iTunesSearch (term) {
+		this.setState({albumQuery: term});
+		// used percent encoding for iTunes API search
+		var query = this.state.albumQuery.split(' ').join('%20');
+		// creates search URL with limit of four results
+		var searchUrl = 'https://itunes.apple.com/search?term=?$' + query + '&entity=album&limit=4';
+>>>>>>> Change
 
 		$.ajax({
 			url: searchUrl,
@@ -48,6 +67,7 @@ export default class CreateImpressionForm extends Component {
 			type: 'GET',
 			dataType: 'jsonp',
 			success: (data) => {
+<<<<<<< HEAD
 				console.log('Album search results: ', data.results);
 				// changes state of results, triggering view change
 				this.setState({ searchResults: [] }, () => {
@@ -56,6 +76,11 @@ export default class CreateImpressionForm extends Component {
 				})
 			});
 				// this.setState({searchResults: data.results});
+=======
+				console.log('Album search results: ', data);
+				// changes state of results, triggering view change
+				this.setState({searchResults: data.results});
+>>>>>>> Change
 			},
 			error: (error) => {
 				console.log(error);
@@ -93,6 +118,7 @@ export default class CreateImpressionForm extends Component {
 	addNewEntry () {
 	 // send object with keys album and date
 	 var newEntry = {album: this.state.album, date: new Date().slice(0,10)};
+
 	 // user can only submit one album
 	 if (this.state.results.length === 1) {
 		 $.ajax({

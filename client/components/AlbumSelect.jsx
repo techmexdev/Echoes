@@ -71,5 +71,4 @@ export default class AlbumSelect extends Component {
       </div>
     );
   }
-
 }
