@@ -396,6 +396,10 @@ table tr.entry:hover {
 	}
 }
 
+td.col-md-3.update {
+	min-width: 350px;
+}
+
 td {
 	vertical-align: middle;
 }

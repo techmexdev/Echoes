@@ -71,7 +71,7 @@ class UpdateBox extends React.Component {
   render() {
       return (
         // td
-        <td className='col-md-3'>
+        <td className='col-md-3 update'>
           {
             this.state.confirmDeletionModalActive &&
 
