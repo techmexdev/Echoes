@@ -1,4 +1,4 @@
-  
+
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -47,9 +47,9 @@ class UpdateBox extends React.Component {
     e.preventDefault();
     this.closeModals();
     this.props.deleteUserEntries(this.props.impressionId, this.props.date, this.props.getUserEntries);
-    
+
   }
-  
+
   handleClickToDelete(e) {
     e.preventDefault();
     this.setState({confirmDeletionModalActive: true});
@@ -61,15 +61,15 @@ class UpdateBox extends React.Component {
         // td
         <td className='col-md-3'>
           {
-            this.state.confirmDeletionModalActive && 
-            
-            (  
+            this.state.confirmDeletionModalActive &&
+
+            (
               <Dialog
                   title="Confirm Removal"
                   actions={[
-                    <FlatButton label="Cancel" primary={true} 
+                    <FlatButton label="Cancel" primary={true}
                       onClick={this.closeModals.bind(this)} />,
-                    <FlatButton label="Continue" primary={true} keyboardFocused={true} 
+                    <FlatButton label="Continue" primary={true}
                       onClick={this.handleDelete.bind(this)} />
                   ]}
                   modal={false}
@@ -78,11 +78,11 @@ class UpdateBox extends React.Component {
                 >
                   Confirm the deletion of this album
                 </Dialog>
-              
-             
+
+
             )
           }
-        
+
           {!this.state.modalActive && (
             <div className='btn-group' role="group">
               {/* update button -- do not remove a tags.
