@@ -7,21 +7,12 @@ import $ from 'jquery';
 import SortEntries from './SortEntries.jsx'
 import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import CreateImpressionForm from './CreateImpressionForm.jsx';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
-const muiTheme = getMuiTheme({
-  palette: {
-    primary1Color: blueGrey900,
-    primary2Color: blueGrey500,
-    accent1Color: blueGrey300,
-    accent2Color: blueGrey400,
-    textColor: lightBlue50,
-    canvasColor: blueGrey900,
-  },
-  appBar: {
-    height: 50,
-  },
-});
-
+// Needed for onTouchTap
+// http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 
 class App extends React.Component {
