@@ -162,7 +162,7 @@ class Entry extends React.Component {
                        </td>
                       
                       {/*song.trackId !== this.state.song.songId && <div className={"col-sm-4"}> </div>*/}
-                      <td className={"col-sm-2"}>{Math.floor(song.trackTimeMillis / 1000 / 60)}:{(Math.floor(song.trackTimeMillis / 1000 % 60) > 10? '' : '0') + Math.floor(song.trackTimeMillis / 1000 % 60)}</td>
+                      <td className={"col-sm-2"}>{Math.floor(song.trackTimeMillis / 1000 / 60)}:{(Math.floor(song.trackTimeMillis / 1000 % 60) >= 10? '' : '0') + Math.floor(song.trackTimeMillis / 1000 % 60)}</td>
                      </tr>
                   ))}
                 </tbody>
