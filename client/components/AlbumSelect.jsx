@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 import {GridList, GridTile} from 'material-ui/GridList';
 import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import './AlbumSelect.css';
 
 export default class AlbumSelect extends Component {
   constructor(props){
     super(props);
   }
+
   handleOpen() {
     this.props.handleStateChange('currForm', 'AlbumSelect')
   }
-  handleSelect(album) {
 
+  selectAlbum(album) {
+    this.props.handleStateChange('album', album);
+    this.props.handleStateChange('currForm', 'ImpressionCreate');
   }
 
   render() {
@@ -48,6 +51,8 @@ export default class AlbumSelect extends Component {
               {
                 this.props.searchResults.map( album =>
                 <GridTile
+                  className={"container"}
+                  onTouchTap={ () => { this.selectAlbum(album.collectionName); } }
                   key={album.artworkUrl100}
                   title={album.collectionName}
                   subtitle={album.artistName}
@@ -56,7 +61,8 @@ export default class AlbumSelect extends Component {
                   cols={2}
                   rows={2}
                 >
-                  <img src={album.albumArtUrl} />
+                  <img src={album.albumArtUrl} style={{width: 'auto'}}/>
+
                 </GridTile>
 
               )}

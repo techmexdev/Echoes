@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import AlbumSelect from './AlbumSelect.jsx';
 import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
 
-// import ImpressionCreate from './ImpressionCreate.jsx';
-// import RatingCreate from './RatingCreate.jsx';
+import ImpressionCreate from './ImpressionCreate.jsx';
+import RatingCreate from './RatingCreate.jsx';
 import moment from 'moment';
 import $ from 'jquery';
 
@@ -22,7 +23,8 @@ export default class CreateImpressionForm extends Component {
       currForm: 'none',
       album: '',
       impression: '',
-      rating: 0
+      rating: 0,
+			snackbar: false
     }
   }
 
@@ -33,11 +35,10 @@ export default class CreateImpressionForm extends Component {
 	}
 
   iTunesSearch (term) {
-		this.setState({albumQuery: term});
 		// used percent encoding for iTunes API search
-		var query = this.state.albumQuery.split(' ').join('%20');
+		var query = term.split(' ').join('%20');
 		// creates search URL with limit of four results
-		var searchUrl = 'https://itunes.apple.com/search?term=?$' + query + '&entity=album&limit=4';
+		var searchUrl = 'https://itunes.apple.com/search?term=?$' + query + '&entity=album&limit=12';
 
 		$.ajax({
 			url: searchUrl,
@@ -49,9 +50,11 @@ export default class CreateImpressionForm extends Component {
 			success: (data) => {
 				console.log('Album search results: ', data.results);
 				// changes state of results, triggering view change
-				data.results.forEach(item => {
+				this.setState({ searchResults: [] }, () => {
+					data.results.forEach(item => {
 					this.spotifyAlbumArtSearch(item.artistName, item.collectionName, item);
 				})
+			});
 				// this.setState({searchResults: data.results});
 			},
 			error: (error) => {
@@ -61,20 +64,35 @@ export default class CreateImpressionForm extends Component {
 		})
 	}
 
-	spotifyAlbumArtSearch(artist, album, iTunesItem) {
+	spotifyAlbumArtSearch(artistSpaced, albumSpaced, iTunesItem) {
+		let artist = artistSpaced.split(' ').join('%20');
+		let album = albumSpaced.split(' ').join('%20');
+
 		fetch(`https://api.spotify.com/v1/search?q=${artist}%20${album}&type=album&limit=1`)
-			.then(res => res.json())
-			.then(json => json.albums.items[0].images[0].url)
+			.catch( e => {
+				console.log('Could not fetch album. Error: ', e)
+			})
+			.then( res => res.json())
+			.then( json => {
+				if(json.albums.items[0].images[0].url !== '')
+				 	return json.albums.items[0].images[0].url
+				return new Error()
+			})
+			.catch( ()=> { console.log('Could not fetch image'); })
 			.then( albumArtUrl => {
-				this.setState({
-					searchResults: this.state.searchResults.concat(Object.assign({}, iTunesItem, {albumArtUrl}))
-				});
-			});
+
+				if(albumArtUrl) {
+						const newSearchRes = [Object.assign({}, iTunesItem, {albumArtUrl}) ];
+						this.setState({
+						searchResults: this.state.searchResults.concat(newSearchRes)
+					});
+				}
+			})
 	}
 
-	addNewEntry (album, date) {
+	addNewEntry () {
 	 // send object with keys album and date
-	 var newEntry = {album: album, date: date.slice(0,10)};
+	 var newEntry = {album: this.state.album, date: new Date().slice(0,10)};
 	 // user can only submit one album
 	 if (this.state.results.length === 1) {
 		 $.ajax({
@@ -121,8 +139,15 @@ export default class CreateImpressionForm extends Component {
 					onTouchTap={() => { this.setState({currForm: 'AlbumSelect'}); } } />
 				<AlbumSelect handleStateChange={this.handleStateChange.bind(this)} currForm={this.state.currForm}
 					iTunesSearch={this.iTunesSearch.bind(this)} searchResults={this.state.searchResults}/>
-				{/* <ImpressionCreate handleStateChange={this.handleStateChange.bind(this)} currForm={this.state.currForm} />
-				<RatingCreate handleStateChange={this.handleStateChange.bind(this)} currForm={this.state.currForm} /> */}
+				 <ImpressionCreate handleStateChange={this.handleStateChange.bind(this)} currForm={this.state.currForm} />
+				<RatingCreate handleStateChange={this.handleStateChange.bind(this)} currForm={this.state.currForm}
+					addNewEntry={()=> this.addNewEntry}/>
+				<Snackbar
+          open={this.state.snackbar}
+          message="You've created an impression"
+          autoHideDuration={2000}
+          onRequestClose={ () => this.setState({snackbar: false}) }
+        />
       </div>
     );
   }
