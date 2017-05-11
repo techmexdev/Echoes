@@ -3,6 +3,7 @@ import { Rating } from 'material-ui-rating';
 import UpdateBox from './UpdateBox.jsx';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import ContentInbox from 'material-ui/svg-icons/content/inbox';
 import Spinner from './Spinner.jsx';
 
 class Entry extends React.Component {
@@ -10,7 +11,7 @@ class Entry extends React.Component {
     super (props)
     this.state = {
       months:["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-      month:'', 
+      month:'',
       albumInfo : {status: 'UNREQUESTED'} ///UNREQUESTED LOADING ERROR DATA
     }
   }
@@ -20,15 +21,15 @@ class Entry extends React.Component {
       month:this.props.date.slice(5,7)
     })
   }
-  
+
   getAlbumInfoItunes(album) {
-    console.log(album);
-    this.setState({albumInfo: {status: 'LOADING'} });
-    console.log('loading album info', album);
+    this.setState({
+      albumInfo: {status: 'LOADING'}
+    });
     var searchAlbumUrl = 'https://itunes.apple.com/search?term=?$' +
                          this.props.title.split(' ').join('%20') +
                          '&entity=album&limit=1';
-    
+
     var _this = this;
     $.ajax({
       url: searchAlbumUrl,
@@ -48,66 +49,42 @@ class Entry extends React.Component {
           type: 'GET',
           dataType: 'jsonp',
           success: (album) => {
-            console.log(album);
             _this.setState({
               albumInfo: {
-                status: 'DATA', 
-                songs: album.results.filter((a) => a.kind === 'song') 
+                status: 'DATA',
+                songs: album.results.filter((a) => a.kind === 'song')
               }
             });
           },
           error: (e) => {
-            console.log('fuuuuuuuuk', e);
-            _this.setState({albumInfo: {status: 'ERROR'} });
+            _this.setState({
+              albumInfo: {status: 'ERROR'}
+            });
           }
         })
       },
       error: (e) => {
-        console.log('shiiiiiiiid', e);
-        _this.setState({albumInfo: {status: 'ERROR'} })
+        _this.setState({
+          albumInfo: {status: 'ERROR'}
+        })
       }
     })
-    
+
   }
-  
-  // iTunesSearch (term) {
-	// 	this.setState({term});
-	// 	// used percent encoding for iTunes API search
-	// 	var query = this.state.term.split(' ').join('%20');
-	// 	// creates search URL with limit of four results
-	// 	var searchUrl = 'https://itunes.apple.com/search?term=?$' + query + '&entity=album&limit=4';
-
-	// 	$.ajax({
-	// 		url: searchUrl,
-	// 		data : {
-	// 			format: 'json'
-	// 		},
-	// 		type: 'GET',
-	// 		dataType: 'jsonp',
-	// 		success: (data) => {
-	// 			console.log(data);
-	// 			// changes state of results, triggering view change
-	// 			this.setState({results: data.results});
-	// 		},
-	// 		error: (error) => {
-	// 			console.log(error);
-	// 			return;
-	// 		}
-	// 	})
-	// }
-
 
   render () {
     var statusAlbum = this.state.albumInfo.status;
     return (
-      
       <tr className='entry row'>
-        
+        {/* Pop-Up of Album info */}
         <Dialog
           title="Songs"
           actions={[
-            <FlatButton label="OK" primary={true}
-              onClick={()=>this.setState({albumInfo: {status: 'UNREQUESTED'}})} />
+            <FlatButton
+              label="OK"
+              primary={true}
+              onClick={()=>this.setState({albumInfo: {status: 'UNREQUESTED'}})}
+            />
           ]}
           modal={false}
           autoScrollBodyContent={true}
@@ -115,35 +92,31 @@ class Entry extends React.Component {
           onRequestClose={()=>this.setState({albumInfo: {status:'UNREQUESTED'} })}
         >
           {statusAlbum === 'LOADING' && <Spinner />}
-          {statusAlbum === 'ERROR' && 'a loading error has occurred. sorry dude'}
-          {statusAlbum === 'DATA' && 
-          
-        <div className='container-list tableDiv'>
-          <table className="table-responsive table">
-            <tbody className='container-fluid entryList'>
-              {this.state.albumInfo.songs.map((song) => (
-                <tr key={song.trackId} className="row">
-                  <td className={"col-sm-10"}>{song.trackName}</td>
-                  <td className={"col-sm-2"}>{Math.floor(song.trackTimeMillis / 1000 / 60)}:{Math.floor(song.trackTimeMillis / 1000 % 60)}</td>
-                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-              
-          
-          
-          
-          
-          
-          
-          
+          {statusAlbum === 'ERROR' && ' A loading error has occurred.'}
+
+          {statusAlbum === 'DATA' &&
+            <div className='container-list tableDiv'>
+              <table className="table-responsive table">
+                <tbody className='container-fluid entryList'>
+                  <tr className="row">
+                    <th><ContentInbox /></th>
+                    <th>Name</th>
+                    <th>Time</th>
+                  </tr>
+                  {this.state.albumInfo.songs.map((song, index) => (
+                    <tr key={song.trackId} className="row">
+                      <td className={"col-sm-2"}>{+index + 1}</td>
+                      <td className={"col-sm-10"}>{song.trackName}</td>
+                      <td className={"col-sm-2"}>{Math.floor(song.trackTimeMillis / 1000 / 60)}:{Math.floor(song.trackTimeMillis / 1000 % 60)}</td>
+                     </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           }
-          
-          
-          
-          
         </Dialog>
+
+        {/* Impression Entry */}
         <td className='listenDate col-md-1'>
           <span className='month'><h4>{moment.months(this.state.month - 1)}</h4> </span>
           <span className='day'><h4>{this.props.date.slice(8, 10)}</h4></span>
