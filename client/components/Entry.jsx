@@ -78,7 +78,7 @@ class Entry extends React.Component {
       <tr className='entry row'>
         {/* Pop-Up of Album info */}
         <Dialog
-          title="Songs"
+          title="Album Info"
           actions={[
             <FlatButton
               label="OK"
