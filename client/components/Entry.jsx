@@ -3,6 +3,8 @@ import { Rating } from 'material-ui-rating';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import ContentInbox from 'material-ui/svg-icons/content/inbox';
+import $ from 'jquery';
+import moment from 'moment';
 import UpdateBox from './UpdateBox.jsx';
 import Spinner from './Spinner.jsx';
 

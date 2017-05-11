@@ -1,6 +1,7 @@
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from "react-tap-event-plugin";
+import $ from 'jquery';
 import SortEntries from './SortEntries.jsx'
 import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';
