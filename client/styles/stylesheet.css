@@ -509,3 +509,6 @@ td {
             transform: rotate(450deg);
   }
 }
+img.albumArt {
+  cursor: pointer;
+}

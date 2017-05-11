@@ -104,12 +104,13 @@ class Entry extends React.Component {
       <tr className='entry row'>
         
         <Dialog
-          title="Album"
+          title="Songs"
           actions={[
             <FlatButton label="OK" primary={true}
               onClick={()=>this.setState({albumInfo: {status: 'UNREQUESTED'}})} />
           ]}
           modal={false}
+          autoScrollBodyContent={true}
           open={statusAlbum !== 'UNREQUESTED'}
           onRequestClose={()=>this.setState({albumInfo: {status:'UNREQUESTED'} })}
         >
@@ -117,11 +118,19 @@ class Entry extends React.Component {
           {statusAlbum === 'ERROR' && 'a loading error has occurred. sorry dude'}
           {statusAlbum === 'DATA' && 
           
-            <ol>
+        <div className='container-list tableDiv'>
+          <table className="table-responsive table">
+            <tbody className='container-fluid entryList'>
               {this.state.albumInfo.songs.map((song) => (
-                <li key={song.trackId}>{song.trackName}</li>
+                <tr key={song.trackId} className="row">
+                  <td className={"col-sm-10"}>{song.trackName}</td>
+                  <td className={"col-sm-2"}>{Math.floor(song.trackTimeMillis / 1000 / 60)}:{Math.floor(song.trackTimeMillis / 1000 % 60)}</td>
+                 </tr>
               ))}
-            </ol>
+            </tbody>
+          </table>
+        </div>
+              
           
           
           
