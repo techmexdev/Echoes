@@ -12,7 +12,8 @@ class Entry extends React.Component {
     this.state = {
       months:["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
       month:'',
-      albumInfo : {status: 'UNREQUESTED'} ///UNREQUESTED LOADING ERROR DATA
+      albumInfo : {status: 'UNREQUESTED'}, ///UNREQUESTED LOADING ERROR DATA
+      song: {songUrl: '', songId: ''}
     }
   }
 
@@ -28,8 +29,8 @@ class Entry extends React.Component {
     });
     var searchAlbumUrl = 'https://itunes.apple.com/search?term=?$' +
                          this.props.title.split(' ').join('%20') +
-                         '&entity=album&limit=1';
-
+                         '&entity=album&limit=10';
+                         
     var _this = this;
     $.ajax({
       url: searchAlbumUrl,
@@ -39,8 +40,12 @@ class Entry extends React.Component {
       type: 'GET',
       dataType: 'jsonp',
       success: (data) => {
-        var collectionId = data.results[0].collectionId;
+        var collectionId = data.results
+                        .filter(a=>a.collectionName === _this.props.title 
+                        && a.artistName === _this.props.artist)[0].collectionId;
+        
         var albumSearchUrl = 'https://itunes.apple.com/lookup?id=' + collectionId + '&entity=song';
+        
         $.ajax({
           url: albumSearchUrl,
           data: {
@@ -71,12 +76,32 @@ class Entry extends React.Component {
     })
 
   }
+  
+  playSong(songId) {
+    var searchSongUrl = 'http://itunes.apple.com/us/lookup?id=' + songId;
+    $.ajax({
+      url: searchSongUrl,
+      data: {
+        format: 'json'
+      },
+      type: 'GET',
+      dataType: 'jsonp',
+      success: (data) => {
+        console.log('data song url preview: ', data.results[0]);
+        this.setState({song: {songUrl: data.results[0].previewUrl, songId: data.results[0].trackId}})
+      },
+      error: (err) => {
+        console.log('error on song download');
+      }
+    });
+  }
 
   render () {
     var statusAlbum = this.state.albumInfo.status;
     return (
       <tr className='entry row'>
         {/* Pop-Up of Album info */}
+        
         <Dialog
           title="Album Info"
           actions={[
@@ -89,8 +114,9 @@ class Entry extends React.Component {
           modal={false}
           autoScrollBodyContent={true}
           open={statusAlbum !== 'UNREQUESTED'}
-          onRequestClose={()=>this.setState({albumInfo: {status:'UNREQUESTED'} })}
+          onRequestClose={()=>this.setState({albumInfo: {status:'UNREQUESTED'}, song: {songUrl:"", songId:""} })}
         >
+          {console.log('songurl: ', this.state.song.songUrl)}
           {statusAlbum === 'LOADING' && <Spinner />}
           {statusAlbum === 'ERROR' && ' A loading error has occurred.'}
 
@@ -126,8 +152,17 @@ class Entry extends React.Component {
                   {this.state.albumInfo.songs.map((song, index) => (
                     <tr key={song.trackId} className="row">
                       <td className={"col-sm-2"}>{+index + 1}</td>
-                      <td className={"col-sm-10"}>{song.trackName}</td>
-                      <td className={"col-sm-2"}>{Math.floor(song.trackTimeMillis / 1000 / 60)}:{Math.floor(song.trackTimeMillis / 1000 % 60)}</td>
+                      <td className={"col-sm-8"}>
+                        <a onClick={(e)=>{e.preventDefault(); this.playSong(song.trackId);}}
+                          style={song.trackId === this.state.song.songId? {textDecoration: 'none', color: '#555', pointerEvents: 'none'} :
+                        {cursor: 'pointer'} }
+                        >{song.trackName}</a>
+                        {song.trackId === this.state.song.songId && <br />}
+                        {song.trackId === this.state.song.songId && <audio src={this.state.song.songUrl} autoPlay controls></audio>}
+                       </td>
+                      
+                      {/*song.trackId !== this.state.song.songId && <div className={"col-sm-4"}> </div>*/}
+                      <td className={"col-sm-2"}>{Math.floor(song.trackTimeMillis / 1000 / 60)}:{(Math.floor(song.trackTimeMillis / 1000 % 60) > 10? '' : '0') + Math.floor(song.trackTimeMillis / 1000 % 60)}</td>
                      </tr>
                   ))}
                 </tbody>
