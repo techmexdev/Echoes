@@ -27,7 +27,8 @@ class Entry extends React.Component {
       months:["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
       month:'',
       albumInfo : {status: 'UNREQUESTED'}, ///UNREQUESTED LOADING ERROR DATA
-      song: {songUrl: '', songId: ''}
+      song: {songUrl: '', songId: ''},
+      songError: null,
     }
   }
 
@@ -101,11 +102,14 @@ class Entry extends React.Component {
       type: 'GET',
       dataType: 'jsonp',
       success: (data) => {
-        console.log('data song url preview: ', data.results[0]);
-        this.setState({song: {songUrl: data.results[0].previewUrl, songId: data.results[0].trackId}})
+        this.setState(
+          {song: {songUrl: data.results[0].previewUrl, songId: data.results[0].trackId}
+        })
       },
       error: (err) => {
-        console.log('error on song download');
+        this.setState(
+          songError: 'Error retrieving song',
+        );
       }
     });
   }
@@ -135,51 +139,50 @@ class Entry extends React.Component {
 
           {statusAlbum === 'DATA' &&
             <div className='container-list tableDiv'>
-              <table className="table-responsive table">
-                <td className='col-md-1 popUp'>
-                  <div>
-                    <img className='albumArt' src={this.props.art_url100} />
-                  </div>
-                </td>
-                <td className='albumInfo col-md-2'>
-                  <div>
-                    <h3>
-                      {this.props.title}
-                      <span> - {this.props.artist}</span>
-                    </h3>
-                    <p>{this.props.year}</p>
-                    <p>{this.props.genre}</p>
-                  </div>
-                </td>
-              </table>
-
-              <br />
-              <br />
-              <table className="table-responsive table">
-                <tbody className='container-fluid entryList'>
-                  <tr className="row">
-                    <th><ContentInbox /></th>
-                    <th>Name</th>
-                    <th>Time</th>
-                  </tr>
+              <Table height='auto' width='100%' fixedHeader style={{backgroundColor: 'blueGrey900'}}>
+                <TableHeader
+                  displaySelectAll={false}
+                  adjustForCheckbox={false}
+                >
+                  <TableRow style={{width:'100px'}}>
+                    <TableHeaderColumn colSpan="3" style={{ width: '200px'}} tooltip='Album Art'>
+                      <h3><img className='albumArt' src={this.props.art_url100} onClick={(e)=>{e.preventDefault(); this.getAlbumInfoItunes(this.props.album);}} /></h3>
+                    </TableHeaderColumn>
+                    <TableHeaderColumn colSpan="3" style={{ width: '400px', whiteSpace: 'normal', verticalAlign:'middle' }} tooltip="Album Info">
+                      <h4>{this.props.title}</h4>
+                      <h5>{this.props.artist}</h5>
+                      <p>{this.props.year}</p>
+                      <p>{this.props.genre}</p>
+                    </TableHeaderColumn>
+                  </TableRow>
+                  <TableRow style={{ width: '100%', verticalAlign:'middle' }}>
+                    <TableHeaderColumn colSpan="1" tooltip="ContentInbox" style={{ width: '200px', 'padding-left': '18px', verticalAlign: 'middle' }}><ContentInbox /></TableHeaderColumn>
+                    <TableHeaderColumn colSpan="4" tooltip="Song Name" style={{ width: '800px', 'padding-left': '60px', verticalAlign: 'middle'  }}>Name</TableHeaderColumn>
+                    <TableHeaderColumn colSpan="1" tooltip="Time" style={{ width: '200px', 'padding-left': '60px', verticalAlign: 'middle'  }}>Time</TableHeaderColumn>
+                  </TableRow>
+                </TableHeader>
+                <TableBody
+                  displayRowCheckbox={false}
+                  showRowHover={true}
+                >
                   {this.state.albumInfo.songs.map((song, index) => (
-                    <tr key={song.trackId} className="row">
-                      <td className={"col-sm-2"}>{+index + 1}</td>
-                      <td className={"col-sm-8"}>
+                    <TableRow key={song.trackId}>
+                      <TableRowColumn colSpan="1">{+index + 1}</TableRowColumn>
+                      <TableRowColumn colSpan="4">
                         <a onClick={(e)=>{e.preventDefault(); this.playSong(song.trackId);}}
-                          style={song.trackId === this.state.song.songId? {textDecoration: 'none', color: '#555', pointerEvents: 'none'} :
-                        {cursor: 'pointer'} }
-                        >{song.trackName}</a>
-                        {song.trackId === this.state.song.songId && <br />}
-                        {song.trackId === this.state.song.songId && <audio src={this.state.song.songUrl} autoPlay controls></audio>}
-                       </td>
-
-                      {/*song.trackId !== this.state.song.songId && <div className={"col-sm-4"}> </div>*/}
-                      <td className={"col-sm-2"}>{Math.floor(song.trackTimeMillis / 1000 / 60)}:{(Math.floor(song.trackTimeMillis / 1000 % 60) >= 10? '' : '0') + Math.floor(song.trackTimeMillis / 1000 % 60)}</td>
-                     </tr>
+                          style={song.trackId === this.state.song.songId ? { textDecoration: 'none', color: '#555', pointerEvents: 'none' } :
+                          {cursor: 'pointer'} }
+                          >{song.trackName}</a>
+                          {song.trackId === this.state.song.songId && <br />}
+                          {song.trackId === this.state.song.songId && <audio src={this.state.song.songUrl} autoPlay controls></audio>}
+                      </TableRowColumn>
+                      <TableRowColumn colSpan="1">
+                        {song.trackTimeMillis && Math.floor(song.trackTimeMillis / 1000 / 60)}:{song.trackTimeMillis && (Math.floor(song.trackTimeMillis / 1000 % 60) >= 10? '' : '0') + Math.floor(song.trackTimeMillis / 1000 % 60)}
+                      </TableRowColumn>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+              </TableBody>
+            </Table>
             </div>
           }
         </Dialog>
