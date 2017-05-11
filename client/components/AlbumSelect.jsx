@@ -53,10 +53,10 @@ export default class AlbumSelect extends Component {
                   subtitle={album.artistName}
                   titlePosition="top"
                   titleBackground="linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)"
-                  cols={1}
-                  rows={1}
+                  cols={2}
+                  rows={2}
                 >
-                  <img src={album.artworkUrl100} />
+                  <img src={album.albumArtUrl} />
                 </GridTile>
 
               )}
