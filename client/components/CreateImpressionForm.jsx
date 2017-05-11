@@ -49,13 +49,27 @@ export default class CreateImpressionForm extends Component {
 			success: (data) => {
 				console.log('Album search results: ', data.results);
 				// changes state of results, triggering view change
-				this.setState({searchResults: data.results});
+				data.results.forEach(item => {
+					this.spotifyAlbumArtSearch(item.artistName, item.collectionName, item);
+				})
+				// this.setState({searchResults: data.results});
 			},
 			error: (error) => {
 				console.log(error);
 				return;
 			}
 		})
+	}
+
+	spotifyAlbumArtSearch(artist, album, iTunesItem) {
+		fetch(`https://api.spotify.com/v1/search?q=${artist}%20${album}&type=album&limit=1`)
+			.then(res => res.json())
+			.then(json => json.albums.items[0].images[0].url)
+			.then( albumArtUrl => {
+				this.setState({
+					searchResults: this.state.searchResults.concat(Object.assign({}, iTunesItem, {albumArtUrl}))
+				});
+			});
 	}
 
 	addNewEntry (album, date) {
