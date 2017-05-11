@@ -97,6 +97,26 @@ class Entry extends React.Component {
           {statusAlbum === 'DATA' &&
             <div className='container-list tableDiv'>
               <table className="table-responsive table">
+                <td className='col-md-1 popUp'>
+                  <div>
+                    <img className='albumArt' src={this.props.art_url100} />
+                  </div>
+                </td>
+                <td className='albumInfo col-md-2'>
+                  <div>
+                    <h3>
+                      {this.props.title}
+                      <span> - {this.props.artist}</span>
+                    </h3>
+                    <p>{this.props.year}</p>
+                    <p>{this.props.genre}</p>
+                  </div>
+                </td>
+              </table>
+
+              <br />
+              <br />
+              <table className="table-responsive table">
                 <tbody className='container-fluid entryList'>
                   <tr className="row">
                     <th><ContentInbox /></th>
