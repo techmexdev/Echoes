@@ -1,9 +1,9 @@
 import React from 'react';
 import { Rating } from 'material-ui-rating';
-import UpdateBox from './UpdateBox.jsx';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import ContentInbox from 'material-ui/svg-icons/content/inbox';
+import UpdateBox from './UpdateBox.jsx';
 import Spinner from './Spinner.jsx';
 
 class Entry extends React.Component {
