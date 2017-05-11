@@ -1,10 +1,26 @@
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import { lightBlue50, indigo900, blueGrey300, blueGrey400, blueGrey500, blueGrey900 } from 'material-ui/styles/colors';
 import injectTapEventPlugin from "react-tap-event-plugin";
 import $ from 'jquery';
 import SortEntries from './SortEntries.jsx'
 import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';
+
+const muiTheme = getMuiTheme({
+  palette: {
+    primary1Color: blueGrey900,
+    primary2Color: blueGrey500,
+    accent1Color: blueGrey300,
+    accent2Color: blueGrey400,
+    textColor: lightBlue50,
+    canvasColor: blueGrey900,
+  },
+  appBar: {
+    height: 50,
+  },
+});
 
 injectTapEventPlugin();
 
@@ -146,7 +162,7 @@ class App extends React.Component {
   // renders the app to the DOM
   render() {
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={muiTheme}>
         <div>
           <div className="container-fluid app">
             <header className="navbar">
@@ -156,27 +172,29 @@ class App extends React.Component {
               </a>
               <img className='navbar-center header logo' src="styles/logo.svg"></img>
             </header>
-            <div className="col-md-2 search">
-              <SortEntries
-                handleSortByAlbum={this.toggleSortAlbum}
-                handleSortByArtist={this.toggleSortArtist}
-                handleSortByHighest={this.toggleSortHighest}
-                handleSortByLowest={this.toggleSortLowest}
-                disableSorts={this.disableSorts}
-              />
-              <Search getUserEntries={this.getUserEntries}/>
-            </div>
-            <div className="col-md-10">
-              <EntryList
-                allEntries={this.state.allEntries}
-                sortByAlbum={this.state.sortByAlbum}
-                sortByArtist={this.state.sortByArtist}
-                sortByRatingLowest={this.state.sortByRatingLowest}
-                sortByRatingHighest={this.state.sortByRatingHighest}
-                updateUserEntries={this.updateUserEntries}
-                getUserEntries={this.getUserEntries}
-                deleteUserEntries={this.deleteUserEntries}
-              />
+            <div className="entries-container">
+              <div className="col-md-2 search">
+                <SortEntries
+                  handleSortByAlbum={this.toggleSortAlbum}
+                  handleSortByArtist={this.toggleSortArtist}
+                  handleSortByHighest={this.toggleSortHighest}
+                  handleSortByLowest={this.toggleSortLowest}
+                  disableSorts={this.disableSorts}
+                />
+                <Search getUserEntries={this.getUserEntries}/>
+              </div>
+              <div className="col-md-10">
+                  <EntryList
+                    allEntries={this.state.allEntries}
+                    sortByAlbum={this.state.sortByAlbum}
+                    sortByArtist={this.state.sortByArtist}
+                    sortByRatingLowest={this.state.sortByRatingLowest}
+                    sortByRatingHighest={this.state.sortByRatingHighest}
+                    updateUserEntries={this.updateUserEntries}
+                    getUserEntries={this.getUserEntries}
+                    deleteUserEntries={this.deleteUserEntries}
+                  />
+              </div>
             </div>
           </div>
         </div>

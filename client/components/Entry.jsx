@@ -1,12 +1,24 @@
 import React from 'react';
 import { Rating } from 'material-ui-rating';
+import Paper from 'material-ui/Paper';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import CircularProgress from 'material-ui/CircularProgress';
 import ContentInbox from 'material-ui/svg-icons/content/inbox';
+import { lightBlue50 } from 'material-ui/styles/colors';
+import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import $ from 'jquery';
 import moment from 'moment';
 import UpdateBox from './UpdateBox.jsx';
-import Spinner from './Spinner.jsx';
+
+
+const style = {
+  height: 100,
+  width: 100,
+  margin: 20,
+  textAlign: 'center',
+  display: 'inline-block',
+};
 
 class Entry extends React.Component {
   constructor (props) {
@@ -32,7 +44,7 @@ class Entry extends React.Component {
     var searchAlbumUrl = 'https://itunes.apple.com/search?term=?$' +
                          this.props.title.split(' ').join('%20') +
                          '&entity=album&limit=10';
-                         
+
     var _this = this;
     $.ajax({
       url: searchAlbumUrl,
@@ -43,11 +55,11 @@ class Entry extends React.Component {
       dataType: 'jsonp',
       success: (data) => {
         var collectionId = data.results
-                        .filter(a=>a.collectionName === _this.props.title 
+                        .filter(a=>a.collectionName === _this.props.title
                         && a.artistName === _this.props.artist)[0].collectionId;
-        
+
         var albumSearchUrl = 'https://itunes.apple.com/lookup?id=' + collectionId + '&entity=song';
-        
+
         $.ajax({
           url: albumSearchUrl,
           data: {
@@ -78,7 +90,7 @@ class Entry extends React.Component {
     })
 
   }
-  
+
   playSong(songId) {
     var searchSongUrl = 'http://itunes.apple.com/us/lookup?id=' + songId;
     $.ajax({
@@ -101,9 +113,9 @@ class Entry extends React.Component {
   render () {
     var statusAlbum = this.state.albumInfo.status;
     return (
-      <tr className='entry row'>
+      <div>
         {/* Pop-Up of Album info */}
-        
+
         <Dialog
           title="Album Info"
           actions={[
@@ -118,8 +130,7 @@ class Entry extends React.Component {
           open={statusAlbum !== 'UNREQUESTED'}
           onRequestClose={()=>this.setState({albumInfo: {status:'UNREQUESTED'}, song: {songUrl:"", songId:""} })}
         >
-          {console.log('songurl: ', this.state.song.songUrl)}
-          {statusAlbum === 'LOADING' && <Spinner />}
+          {statusAlbum === 'LOADING' && <CircularProgress size={50} color={lightBlue50} />}
           {statusAlbum === 'ERROR' && ' A loading error has occurred.'}
 
           {statusAlbum === 'DATA' &&
@@ -162,7 +173,7 @@ class Entry extends React.Component {
                         {song.trackId === this.state.song.songId && <br />}
                         {song.trackId === this.state.song.songId && <audio src={this.state.song.songUrl} autoPlay controls></audio>}
                        </td>
-                      
+
                       {/*song.trackId !== this.state.song.songId && <div className={"col-sm-4"}> </div>*/}
                       <td className={"col-sm-2"}>{Math.floor(song.trackTimeMillis / 1000 / 60)}:{(Math.floor(song.trackTimeMillis / 1000 % 60) >= 10? '' : '0') + Math.floor(song.trackTimeMillis / 1000 % 60)}</td>
                      </tr>
@@ -173,45 +184,49 @@ class Entry extends React.Component {
           }
         </Dialog>
 
-        {/* Impression Entry */}
-        <td className='listenDate col-md-1'>
-          <span className='month'><h4>{moment.months(this.state.month - 1)}</h4> </span>
-          <span className='day'><h4>{this.props.date.slice(8, 10)}</h4></span>
-          <span className='year'>{this.props.date.slice(0,4)}</span>
-        </td>
-        <td className='col-md-1' onClick={(e)=>{e.preventDefault(); this.getAlbumInfoItunes(this.props.album);}}>
-          <div>
-            <img className='albumArt' src={this.props.art_url100} />
-          </div>
-        </td>
-        <td className='albumInfo col-md-2'>
-          <div>
-            <h4>{this.props.title}</h4>
-            <h5>{this.props.artist}</h5>
-            <p>{this.props.year}</p>
-            <p>{this.props.genre}</p>
-          </div>
-        </td>
-        <td className='impression col-md-4'>
-          <div>{this.props.impression}</div>
-        </td>
-        <td className='rating col-md-3'>
-          <Rating
-            value={this.props.rating}
-            max={5}
-            readOnly
-          />
-        </td>
-        <UpdateBox impressionId={this.props.impressionId}
-                   date={this.props.date}
-                   impression={this.props.impression}
-                   rating={this.props.rating}
-                   updateUserEntries={this.props.updateUserEntries}
-                   getUserEntries={this.props.getUserEntries}
-                   deleteUserEntries={this.props.deleteUserEntries}/>
-      </tr>
-    )
-  }
-}
+
+        <TableRow
+          key={this.props.index}
+          style={{ height: '122px', width: '75%', textAlign: 'left' }}
+          hoverable={true}
+        >
+          <TableRowColumn colSpan="2" style={{ width: '150px' }}>
+            <span className='month'><h4>{moment.months(this.state.month - 1)}</h4> </span>
+            <span className='day'><h4>{this.props.date.slice(8, 10)}</h4></span>
+            <span className='year'>{this.props.date.slice(0,4)}</span>
+          </TableRowColumn>
+          <TableRowColumn colSpan="2" style={{ width: '200px'}}>
+            <h3><img className='albumArt' src={this.props.art_url100} onClick={(e)=>{e.preventDefault(); this.getAlbumInfoItunes(this.props.album);}} /></h3>
+          </TableRowColumn>
+          <TableRowColumn colSpan="2" style={{ width: '400px', whiteSpace: 'normal' }}>
+              <h4>{this.props.title}</h4>
+              <h5>{this.props.artist}</h5>
+              <p>{this.props.year}</p>
+              <p>{this.props.genre}</p>
+          </TableRowColumn>
+          <TableRowColumn colSpan="4" style={{ width: '500px', 'white-space': 'normal' }}>
+            <div className="impression">{this.props.impression}</div>
+          </TableRowColumn>
+          <TableRowColumn colSpan="3">
+            <Rating
+              value={this.props.rating}
+              max={5}
+              readOnly
+            />
+          </TableRowColumn>
+          <TableRowColumn colSpan="3" style={{ textAlign: 'center' }}>
+            <UpdateBox impressionId={this.props.impressionId}
+                       date={this.props.date}
+                       impression={this.props.impression}
+                       rating={this.props.rating}
+                       updateUserEntries={this.props.updateUserEntries}
+                       getUserEntries={this.props.getUserEntries}
+                       deleteUserEntries={this.props.deleteUserEntries}/>
+          </TableRowColumn>
+        </TableRow>
+      </div>
+    );
+  };
+};
 
 export default Entry;

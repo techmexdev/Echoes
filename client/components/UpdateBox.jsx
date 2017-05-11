@@ -99,24 +99,27 @@ class UpdateBox extends React.Component {
             <div className='btn-group' role="group">
               {/* update button -- do not remove a tags.
                 They are necessary to maintain working buttons while keeping bootstrap styling */}
-              <a onClick={this.openModal}>
+              <div>
                 <button className='update btn btn-default'>
-                  {/* pencil icon */}
-                  <span className='glyphicon glyphicon-pencil'></span>
+                  <a onClick={this.openModal}>
+                    {/* pencil icon */}
+                    <span className='glyphicon glyphicon-pencil'></span>
+                  </a>
                 </button>
-              </a>
+              </div>
               {/*  delete button */}
-              <a onClick={this.handleClickToDelete}>
+              <div>
                 <button className='remove btn btn-default'>
-                  {/* remove button */}
-                  <span className='glyphicon glyphicon-remove-circle'></span>
+                  <a onClick={this.handleClickToDelete}>
+                    {/* remove button */}
+                    <span className='glyphicon glyphicon-remove-circle'></span>
+                  </a>
                 </button>
-              </a>
+              </div>
             </div>
           )}
           {this.state.modalActive && (
             <div className='update'>
-
               {/* remove icon */}
               <span className='close glyphicon glyphicon-remove' onClick={this.closeModals}></span>
 
@@ -146,8 +149,8 @@ class UpdateBox extends React.Component {
               </div>
                 <div className='input-group'>
                   <span className='input-group-btn'>
-                    <button className='btn btn-default' type='submit' id="submit" name='button' value='Save'>Submit</button>
-                    <button className='btn btn-default' onClick={this.closeModals}>Cancel</button>
+                    <button className='btn btn-default updateForm' type='submit' id="submit" name='button' value='Save'>Submit</button>
+                    <button className='btn btn-default updateForm' onClick={this.closeModals}>Cancel</button>
                   </span>
                 </div>
               </form>
