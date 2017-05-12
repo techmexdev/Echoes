@@ -156,7 +156,7 @@ class Entry extends React.Component {
                     </TableHeaderColumn>
                   </TableRow>
                   <TableRow style={{ width: '100%', verticalAlign:'middle' }}>
-                    <TableHeaderColumn colSpan="1" tooltip="ContentInbox" style={{ width: '200px', 'padding-left': '18px', verticalAlign: 'middle' }}><ContentInbox /></TableHeaderColumn>
+                    <TableHeaderColumn colSpan="1" style={{ width: '200px', 'padding-left': '18px', verticalAlign: 'middle' }}><ContentInbox /></TableHeaderColumn>
                     <TableHeaderColumn colSpan="4" tooltip="Song Name" style={{ width: '800px', 'padding-left': '60px', verticalAlign: 'middle'  }}>Name</TableHeaderColumn>
                     <TableHeaderColumn colSpan="1" tooltip="Time" style={{ width: '200px', 'padding-left': '60px', verticalAlign: 'middle'  }}>Time</TableHeaderColumn>
                   </TableRow>

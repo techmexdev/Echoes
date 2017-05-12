@@ -63,14 +63,6 @@ class App extends React.Component {
     this.getUserEntries();
   }
 
-  // after component mounts
-  componentDidMount() {
-    // will show dialog of what user listened to on year ago today
-    this.setState({
-      impressThrowBack: true,
-    })
-  }
-
   // disables all sorting states
   disableSorts(){
     this.setState({
@@ -125,10 +117,15 @@ class App extends React.Component {
         // sets current user name
         if (response.length) {
           let oneYearEnt = app.findOneYearEntries(response);
+          let impressState = true;
+          if (oneYearEnt.length <= 0) {
+            impressState = false;
+          }
           app.setState({
             allEntries: response,
             currentUser: response[0].user,
             throwBackEntries: oneYearEnt,
+            impressThrowBack: impressState,
           })
         } else {
           app.setState({
@@ -221,8 +218,6 @@ class App extends React.Component {
               title="1 Year Ago Today..."
               modal={false}
               open={this.state.impressThrowBack}
-              autoScrollBodyContent={true}
-              onRequestClose={this.handleClose}
               actions= {
                 <FlatButton
                   label="Close"
