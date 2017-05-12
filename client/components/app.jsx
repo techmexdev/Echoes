@@ -10,6 +10,7 @@ import moment from 'moment';
 import SortEntries from './SortEntries.jsx'
 import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';
+import ThrowBackImpression from './ThrowBackImpression.jsx';
 
 injectTapEventPlugin();
 
@@ -66,7 +67,7 @@ class App extends React.Component {
   componentDidMount() {
     // will show dialog of what user listened to on year ago today
     this.setState({
-      impressThrowBack: false,
+      impressThrowBack: true,
     })
   }
 
@@ -96,17 +97,22 @@ class App extends React.Component {
       }
     })
   }
+
   findOneYearEntries(entries) {
     let oneYearEntries = [];
     let todayDate = new Date();
     let formattedDate = moment(todayDate).format('YYYY-MM-DD');
+    let dateArr = formattedDate.split('');
+    dateArr[3] = (+dateArr[3] - 1).toString();
+    let historyDate = dateArr.join('');
+
     for (let idx in entries) {
       let entryDay = entries[idx].date.slice(0, 10);
-      console.log(entries[idx]);
-      if (formattedDate === entryDay) {
+      if (historyDate === entryDay) {
         oneYearEntries.push(entries[idx]);
       }
     }
+    return oneYearEntries;
   }
   //gets all users entries
   getUserEntries () {
@@ -213,8 +219,10 @@ class App extends React.Component {
 
             <Dialog
               title="1 Year Ago Today..."
-              modal={true}
+              modal={false}
               open={this.state.impressThrowBack}
+              autoScrollBodyContent={true}
+              onRequestClose={this.handleClose}
               actions= {
                 <FlatButton
                   label="Close"
@@ -223,7 +231,7 @@ class App extends React.Component {
                 />
               }
             >
-              <EntryList
+              <ThrowBackImpression
                 allEntries={this.state.throwBackEntries}
               />
             </Dialog>

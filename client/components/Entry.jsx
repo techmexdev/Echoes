@@ -207,7 +207,7 @@ class Entry extends React.Component {
               <p>{this.props.year}</p>
               <p>{this.props.genre}</p>
           </TableRowColumn>
-          <TableRowColumn colSpan="4" style={{ width: '500px', 'white-space': 'normal' }}>
+          <TableRowColumn colSpan="4" style={{ width: '500px', 'whiteSpace': 'normal' }}>
             <div className="impression">{this.props.impression}</div>
           </TableRowColumn>
           <TableRowColumn colSpan="3">
