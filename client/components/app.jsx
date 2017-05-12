@@ -1,6 +1,8 @@
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Dialog from 'material-ui/Dialog';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import FlatButton from 'material-ui/FlatButton';
 import { lightBlue50, indigo900, blueGrey300, blueGrey400, blueGrey500, blueGrey900 } from 'material-ui/styles/colors';
 import injectTapEventPlugin from "react-tap-event-plugin";
 import $ from 'jquery';
@@ -8,6 +10,9 @@ import SortEntries from './SortEntries.jsx'
 import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';
 
+injectTapEventPlugin();
+
+// sets color sets for Material UI components
 const muiTheme = getMuiTheme({
   palette: {
     primary1Color: blueGrey900,
@@ -22,8 +27,6 @@ const muiTheme = getMuiTheme({
   },
 });
 
-injectTapEventPlugin();
-
 class App extends React.Component {
   constructor (props) {
     super (props);
@@ -37,11 +40,13 @@ class App extends React.Component {
       sortByArtist: false,
       sortByRatingHighest: false,
       sortByRatingLowest: false,
+      impressThrowBack: false,
     };
     // Bindings
     this.disableSorts = this.disableSorts.bind(this);
     this.deleteUserEntries = this.deleteUserEntries.bind(this);
     this.getUserEntries = this.getUserEntries.bind(this);
+    this.handleClose = this.handleClose.bind(this);
     this.toggleSortAlbum = this.toggleSortAlbum.bind(this);
     this.toggleSortArtist = this.toggleSortArtist.bind(this);
     this.toggleSortLowest = this.toggleSortLowest.bind(this);
@@ -49,11 +54,20 @@ class App extends React.Component {
     this.updateUserEntries = this.updateUserEntries.bind(this);
   }
   // when the component loads successfully
-  componentWillMount () {
+  componentWillMount() {
     // load all of the user's data
     this.getUserEntries();
   }
 
+  // after component mounts
+  componentDidMount() {
+    // will show dialog of what user listened to on year ago today
+    this.setState({
+      impressThrowBack: true,
+    })
+  }
+
+  // disables all sorting states
   disableSorts(){
     this.setState({
       sortByAlbum: false,
@@ -79,6 +93,7 @@ class App extends React.Component {
       }
     })
   }
+  //gets all users entries
   getUserEntries () {
     var app = this;
     $.ajax({
@@ -113,6 +128,12 @@ class App extends React.Component {
       // new users are greetedwith Hello
       return `Hello!`
     }
+  }
+
+  handleClose() {
+    this.setState({
+      impressThrowBack: false,
+    });
   }
 
   toggleSortAlbum() {
@@ -172,6 +193,21 @@ class App extends React.Component {
               </a>
               <img className='navbar-center header logo' src="styles/logo.svg"></img>
             </header>
+
+            <Dialog
+              title="Dialog With Actions"
+              modal={true}
+              open={this.state.impressThrowBack}
+              actions= {
+                <FlatButton
+                  label="Close"
+                  primary={true}
+                  onTouchTap={this.handleClose}
+                />
+              }
+            >
+              1 Year Ago Today...
+            </Dialog>
             <div className="entries-container">
               <div className="col-md-2 search">
                 <SortEntries
