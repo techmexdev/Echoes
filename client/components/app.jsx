@@ -248,8 +248,6 @@ class App extends React.Component {
               title="1 Year Ago Today..."
               modal={false}
               open={this.state.impressThrowBack}
-              autoScrollBodyContent={true}
-              onRequestClose={this.handleClose}
               actions= {
                 <FlatButton
                   label="Close"
