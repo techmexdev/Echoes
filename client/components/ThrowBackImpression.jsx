@@ -2,7 +2,6 @@ import React from 'react';
 import { GridList } from 'material-ui/GridList';
 import ThrowBackImpressionEntry from './ThrowBackImpressionEntry.jsx';
 
-
 const styles = {
   root: {
     display: 'flex',
