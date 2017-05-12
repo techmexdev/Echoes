@@ -72,8 +72,6 @@ router.post('/', function(req, res) {
         .then(function(userId){
           userId = userId[0].id || artistId[0];
           
-          console.log('!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~>', userId, artistId, albumId, date)
-          
           insertIfNeeded('album_impression',
                           { user_id: userId, album_id: albumId, date:date },
                           { user_id: userId, album_id: albumId, date:date })
