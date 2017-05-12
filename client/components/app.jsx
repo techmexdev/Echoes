@@ -7,6 +7,7 @@ import $ from 'jquery';
 import SortEntries from './SortEntries.jsx'
 import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';
+import CreateImpressionForm from './CreateImpressionForm.jsx';
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -21,7 +22,6 @@ const muiTheme = getMuiTheme({
     height: 50,
   },
 });
-
 injectTapEventPlugin();
 
 class App extends React.Component {
@@ -170,6 +170,7 @@ class App extends React.Component {
               <a href="/signout" className='navbar-right signout'>
                 <button className="btn btn-default landing"><span>Sign Out</span></button>
               </a>
+              <CreateImpressionForm />
               <img className='navbar-center header logo' src="styles/logo.svg"></img>
             </header>
             <div className="entries-container">

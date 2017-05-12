@@ -8,6 +8,7 @@ var knex = require('../../db/db.js');
 router.get('/', function (req, res) {
   // get username from the cookie
   var username = req.cookies.username;
+
   // find all listen instances by the user
   knex.from('users')
       .join('album_impression', 'users.id', 'album_impression.user_id')
@@ -27,7 +28,7 @@ router.get('/', function (req, res) {
         res.status(200).send(result);
       })
       .catch(function (err) {
-        console.log('Problem grabbing user info');
+        console.log('---------> Problem grabbing user info');
       })
 });
 
@@ -54,7 +55,9 @@ router.post('/', function(req, res) {
   var album = req.body.album;
   var date = req.body.date.slice(0, 10);
   var username = req.cookies.username;
-  
+
+  console.log('------------>Username', username)
+
   insertIfNeeded('artist', {name: album.artistName}, {name: album.artistName})
   .then(function(artistId) {
       artistId = artistId[0].id || artistId[0];
@@ -65,7 +68,7 @@ router.post('/', function(req, res) {
                   year: album.releaseDate.slice(0,4),
                   art_url60: album.artworkUrl60,
                   art_url100: album.artworkUrl100
-                 } 
+                 }
                  ,{title: album.collectionName, artist_id: artistId})
       .then(function(albumId) {
         albumId = albumId[0].id || albumId[0];
@@ -101,8 +104,8 @@ router.post('/', function(req, res) {
         })
       })
   })
-  
-  
+
+
 })
 
 

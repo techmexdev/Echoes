@@ -1,0 +1,16 @@
+.container {
+    position: relative;
+}
+
+.overlay {
+  transition: .5s ease;
+  opacity: 0;
+}
+
+.container:hover img {
+  opacity: 0.3;
+}
+
+.container:hover .middle {
+  opacity: 1;
+}

@@ -4,6 +4,7 @@ import Paper from 'material-ui/Paper';
 import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
 import Entry from './Entry.jsx';
+import './Pagination.css';
 
 const tableStyle = {
   textAlign: 'left',
@@ -138,7 +139,6 @@ class EntryList extends React.Component {
           maxButtons={5}
           activePage={this.state.currPage}
           onSelect={this.handleSelect}
-          style={{backgroundColor: '#90A4AE'}}
         />
       </div>
     );
