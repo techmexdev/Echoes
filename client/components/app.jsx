@@ -286,7 +286,6 @@ class App extends React.Component {
               </div>
             </div>
           </div>
-          {console.log('songurl before rendering: ', this.state)}
           {this.state.song.songUrl !== ''  &&
           <AudioPlayer style={{ position: 'fixed', bottom: 0, right: 0, width: '100%' }}
                             playlist={[{url: this.state.song.songUrl, displayText:''}]}
