@@ -6,6 +6,7 @@ import FlatButton from 'material-ui/FlatButton';
 import { lightBlue50, indigo900, blueGrey300, blueGrey400, blueGrey500, blueGrey900 } from 'material-ui/styles/colors';
 import injectTapEventPlugin from "react-tap-event-plugin";
 import $ from 'jquery';
+import moment from 'moment';
 import SortEntries from './SortEntries.jsx'
 import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';
@@ -35,6 +36,7 @@ class App extends React.Component {
       viewingEntry: '',
       allEntries: [],
       searchResults: [],
+      throwBackEntries: [],
       currentUser: '',
       sortByAlbum: false,
       sortByArtist: false,
@@ -45,6 +47,7 @@ class App extends React.Component {
     // Bindings
     this.disableSorts = this.disableSorts.bind(this);
     this.deleteUserEntries = this.deleteUserEntries.bind(this);
+    this.findOneYearEntries = this.findOneYearEntries.bind(this);
     this.getUserEntries = this.getUserEntries.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.toggleSortAlbum = this.toggleSortAlbum.bind(this);
@@ -63,7 +66,7 @@ class App extends React.Component {
   componentDidMount() {
     // will show dialog of what user listened to on year ago today
     this.setState({
-      impressThrowBack: true,
+      impressThrowBack: false,
     })
   }
 
@@ -93,6 +96,18 @@ class App extends React.Component {
       }
     })
   }
+  findOneYearEntries(entries) {
+    let oneYearEntries = [];
+    let todayDate = new Date();
+    let formattedDate = moment(todayDate).format('YYYY-MM-DD');
+    for (let idx in entries) {
+      let entryDay = entries[idx].date.slice(0, 10);
+      console.log(entries[idx]);
+      if (formattedDate === entryDay) {
+        oneYearEntries.push(entries[idx]);
+      }
+    }
+  }
   //gets all users entries
   getUserEntries () {
     var app = this;
@@ -103,9 +118,11 @@ class App extends React.Component {
         // sets state of all entries
         // sets current user name
         if (response.length) {
+          let oneYearEnt = app.findOneYearEntries(response);
           app.setState({
             allEntries: response,
-            currentUser: response[0].user
+            currentUser: response[0].user,
+            throwBackEntries: oneYearEnt,
           })
         } else {
           app.setState({
@@ -195,7 +212,7 @@ class App extends React.Component {
             </header>
 
             <Dialog
-              title="Dialog With Actions"
+              title="1 Year Ago Today..."
               modal={true}
               open={this.state.impressThrowBack}
               actions= {
@@ -206,7 +223,9 @@ class App extends React.Component {
                 />
               }
             >
-              1 Year Ago Today...
+              <EntryList
+                allEntries={this.state.throwBackEntries}
+              />
             </Dialog>
             <div className="entries-container">
               <div className="col-md-2 search">
