@@ -198,6 +198,7 @@ class App extends React.Component {
                 getUserEntries={this.getUserEntries}
                 deleteUserEntries={this.deleteUserEntries}
               />
+            </table>
             </div>
           </div>
         </div>

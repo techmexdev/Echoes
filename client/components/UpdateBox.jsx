@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> tmp
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -84,28 +80,16 @@ class UpdateBox extends React.Component {
                   title="Confirm Removal"
                   actions={[
                     <FlatButton label="Cancel" primary={true}
-<<<<<<< HEAD
                       onClick={this.closeModals.bind(this)} />,
                     <FlatButton label="Continue" primary={true}
                       onClick={this.handleDelete.bind(this)} />
-=======
-                      onClick={this.closeModals} />,
-                    <FlatButton label="Continue" primary={true}
-                      onClick={this.handleDelete} />
->>>>>>> tmp
                   ]}
                   modal={false}
                   open={this.state.confirmDeletionModalActive}
                   onRequestClose={this.closeModals}
                 >
                   Confirm the deletion of this album
-<<<<<<< HEAD
-                </Dialog>
-=======
              </Dialog>
->>>>>>> tmp
-
-
             )
           }
 
