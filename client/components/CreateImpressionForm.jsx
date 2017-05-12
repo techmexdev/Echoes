@@ -125,7 +125,7 @@ export default class CreateImpressionForm extends Component {
 
   render() {
     return(
-      <div>
+      <div style={{float: 'right'}}>
 				<RaisedButton label="+"
 					onTouchTap={() => { this.setState({currForm: 'AlbumSelect'}); } }
 					backgroundColor='#254E70' labelColor='#fff'/>

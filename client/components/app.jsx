@@ -170,7 +170,7 @@ class App extends React.Component {
               <a href="/signout" className='navbar-right signout'>
                 <button className="btn btn-default landing"><span>Sign Out</span></button>
               </a>
-              <CreateImpressionForm />
+              <CreateImpressionForm style={{marginRight: 5}}/>
               <img className='navbar-center header logo' src="styles/logo.svg"></img>
             </header>
             <div className="entries-container">
