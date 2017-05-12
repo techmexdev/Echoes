@@ -14,13 +14,12 @@ router.get('/', function (req, res) {
       .where('users.username', username)
       .join('album', 'album_impression.album_id', 'album.id')
       .join('artist', 'artist.id', 'album.artist_id')
-      .join('listen_date', 'listen_date.album_impression_id', 'album_impression.id')
       .select('users.user',
-              'listen_date.date',
+              'album_impression.date',
               'album.title', 'artist.name', 'album.genre', 'album.year',
               'album_impression.rating', 'album_impression.impression', 'album_impression.id',
               'album.art_url60', 'album.art_url100')
-      .orderBy('listen_date.date', 'desc')
+      .orderBy('album_impression.date', 'desc')
       .then(function (result) {
         // send the result back to the user
         console.log(result);
@@ -52,7 +51,7 @@ function insertIfNeeded(table, fields, keys, errMessage) {
 //post new album to the database
 router.post('/', function(req, res) {
   var album = req.body.album;
-  var date = req.body.date.slice(0, 10);
+  var date = req.body.date.slice(0, 10); ///full date
   var username = req.cookies.username;
   
   insertIfNeeded('artist', {name: album.artistName}, {name: album.artistName})
@@ -71,33 +70,15 @@ router.post('/', function(req, res) {
         albumId = albumId[0].id || albumId[0];
         knex('users').select('id').where({username: username})
         .then(function(userId){
-          userId = userId[0].id;
-          insertIfNeeded('album_impression', { user_id: userId, album_id: albumId}
-                      , {user_id: userId, album_id: albumId})
-          .then(function(impressId) {
-            console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~impid,date ', impressId, date);
-            impressId = impressId[0].id || impressId[0];
-            console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~impid,date ', impressId, date);
-            knex('listen_date').select('id')
-              .where('album_impression_id', impressId)
-              .where('date', date)
-              .then( function (listenId) {
-                if (listenId.length) {
-                  res.status(400).send('You already listened to this album that day.');
-                } else {
-                  knex('listen_date').insert({
-                    date: date,
-                    album_impression_id: impressId
-                  }).then(function() {
-                    res.status(201).send('Successful PostA!');
-                  })
-                  .catch(function (err) {
-                    console.log('Problem with inserting listen_date #1');
-                    throw err;
-                  });
-                }
-              });
-          })
+          userId = userId[0].id || artistId[0];
+          
+          console.log('!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~>', userId, artistId, albumId, date)
+          
+          insertIfNeeded('album_impression',
+                          { user_id: userId, album_id: albumId, date:date },
+                          { user_id: userId, album_id: albumId, date:date })
+          .then((id)=>{res.status(201).send('Success ' + id[0])})
+          .catch((e)=>res.status(401).send('error occurred' + e));
         })
       })
   })
@@ -154,37 +135,14 @@ router.post('/update', function (req, res) {
 
 // remove listen_date
 router.post('/delete', function (req, res) {
-  var listenEntry = req.body;
+  var listenEntry = req.body; //.impressionId and .date
   //find the listen_date Entry
-  knex('listen_date')
-    // check if there is more than 1 date for that impression_id
-    .where('album_impression_id', listenEntry.impressionId)
-    .then(function (dates) {
-      if (dates.length > 1) {
-        // delete listen_date entry
-        knex('listen_date')
-        .where('album_impression_id', listenEntry.impressionId)
-        .where('date', listenEntry.date)
-        .del()
-        .then(function () {
-          res.status(201).send('Successfully removed album');
-        });
-        // if album_impress_id = 1
-      } else {
-        // delete album_impression
-        knex('listen_date')
-        .where('album_impression_id', listenEntry.impressionId)
-        .where('date', listenEntry.date)
-        .del()
-        .then(function () {
-          knex('album_impression')
-          .where('id', listenEntry.impressionId)
-          .del()
-          .then(function () {
-            res.status(201).send('Successfully removed album');
-          });
-        });
-      }
+  
+  knex('album_impression')
+    .where('id', req.body.impressionId)
+    .del()
+    .then(function() {
+      res.status(201).send('Successfully removed album');
     });
 });
 
