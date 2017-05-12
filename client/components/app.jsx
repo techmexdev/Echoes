@@ -25,7 +25,6 @@ const muiTheme = getMuiTheme({
     height: 50,
   },
 });
->>>>>>> tmp
 injectTapEventPlugin();
 
 class App extends React.Component {
