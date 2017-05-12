@@ -50,16 +50,18 @@ table {
 -------------------------*/
 
 body {
-  background: #4b6ecc;
-  font-family: 'Raleway', sans-serif;
+  background: #000022;
+	font-family: 'Roboto', sans-serif;
+	font-family: 'Rasa', serif;
 }
 
 body.dashboard {
-	background: #f9f9f9;
+	background: #000022;
+	color: #fff;
 }
 
 span {
-  color: #4b6ecc;
+  color: #fff;
 }
 
 /*-------------------------
@@ -72,10 +74,16 @@ span {
 
 button.btn.btn-default.landing {
   margin-bottom: 20px;
+	background-color: #263238;
+}
+
+button.btn.btn-default.landing:hover {
+	background-color: #122866;
 }
 
 .blurb {
-  font-family: 'Raleway', sans-serif;
+	font-family: 'Roboto', sans-serif;
+	font-family: 'Rasa', serif;
   color: #fff;
   margin: 20px;
   font-size: 18px;
@@ -127,7 +135,8 @@ span.close {
 }
 
 .blurb {
-  font-family: 'Raleway', sans-serif;
+	font-family: 'Roboto', sans-serif;
+	font-family: 'Rasa', serif;
   color: #fff;
   margin: 20px;
   font-size: 18px;
@@ -168,10 +177,18 @@ a.signout {
 }
 
 .btn-group button {
-	margin-left:170px;
+	margin-left:100px;
 }
-button.update {
+button.update,
+button.remove {
 	margin-bottom: 20px;
+	margin-right: 20px;
+	background-color: #607D8B;
+}
+
+button.update:hover,
+button.remove:hover {
+	background-color: #19354c;
 }
 
 table tr td div.btn-group {
@@ -184,12 +201,21 @@ table tr:hover td div.btn-group {
 }
 
 table tr.entry:hover {
-	background-color:#f9f9f9;
+	background-color:#607D8B;
 }
 
 .close {
+	color: #fff;
 	margin-bottom: 10px;
 	margin-right:10px;
+}
+
+div.impression {
+	font-size: 17px;
+}
+
+div.entries-container {
+	background-color: #263238;
 }
 
 /*-------------------------
@@ -225,9 +251,10 @@ div.col-md-6.text-center {
 }
 
 h2.greeting {
-  font-family: 'Raleway', sans-serif;
+	font-family: 'Rasa', serif;
+	font-family: 'Roboto', sans-serif;
   font-weight: 300;
-  font-size: 24px;
+  font-size: 26px;
   color: #fff;
   margin-top: 20px;
   margin-left: 20px;
@@ -251,7 +278,7 @@ h2.greeting {
 }
 
 .rating {
-  text-align:center;
+	vertical-align: middle;
 }
 
 .entry {
@@ -267,7 +294,7 @@ h2.greeting {
 }
 
 header {
-  background-color: #4b6ecc;
+  background-color: #263238;
 }
 
 .navbar {
@@ -279,20 +306,21 @@ header {
 }
 
 div.update {
-  margin-left: 50px;
+  margin-left: 100px;
 }
 
 header.navbar {
-  border-radius: 0;
+  border-radius: 1;
 }
 
 tbody {
-	background-color: white;
+	background-color: #000022;
 }
 
 .btn {
   margin: 0 10px 0 10px;
   font-weight: 500;
+	background-color: #263238;
 }
 
 .add-album {
@@ -315,7 +343,7 @@ a.signout {
 }
 
 .btn-group button {
-	margin-left:170px;
+	margin-left:100px;
 }
 
 button.update {
@@ -332,12 +360,26 @@ table tr:hover td div.btn-group {
 }
 
 table tr.entry:hover {
-	background-color:#f9f9f9;
+	background-color:#607D8B;
 }
 
 .close {
 	margin-bottom: 10px;
 	margin-right:10px;
+}
+
+button.btn.btn-default.updateForm {
+	border-radius: 3px;
+	margin-right: 30px;
+	margin-bottom: 20px;
+}
+
+td.listenDate {
+	color: #fff;
+}
+
+.pagination span {
+	color: #1A237E;
 }
 
 /*--------------------------
@@ -396,7 +438,18 @@ table tr.entry:hover {
 	}
 }
 
+td.col-md-3.update {
+	min-width: 350px;
+}
 
 td {
 	vertical-align: middle;
+}
+
+.form-group {
+	background-color: #263238;
+}
+
+img.albumArt {
+  cursor: pointer;
 }

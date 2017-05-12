@@ -18,8 +18,8 @@ export default class RatingCreate extends Component {
   }
 
   handleSubmit() {
-    this.props.handleStateChange('currForm', 'none');
     this.props.addNewEntry();
+    this.props.handleStateChange('currForm', 'none');
     this.props.handleStateChange('snackbar', true);
 
   }

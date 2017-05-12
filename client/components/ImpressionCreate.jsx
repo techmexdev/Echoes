@@ -4,7 +4,6 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
 export default class ImpressionCreate extends Component {
-
   constructor(props) {
     super(props);
   }

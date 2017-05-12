@@ -40,8 +40,9 @@ export default class AlbumSelect extends Component {
           open={this.props.currForm === 'AlbumSelect'}
           onRequestClose={() => { this.props.handleStateChange('currForm', 'none'); } }
         >
-          <TextField hintText="Search for an album"
-            onChange={(event) => { this.props.iTunesSearch(event.target.value) } } />
+          <TextField
+            onChange={(event) => { this.props.iTunesSearch(event.target.value) } }
+             />
             <GridList
               cols={2}
               cellHeight={200}

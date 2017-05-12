@@ -92,9 +92,10 @@ export default class CreateImpressionForm extends Component {
 
 	addNewEntry () {
 	 // send object with keys album and date
-	 var newEntry = {album: this.state.album, date: new Date().slice(0,10)};
+	 var newEntry = {album: this.state.album, date: new Date().toString().slice(0,10)};
+	 console.log('Add new entry. Album', newEntry.album, 'Date: ', newEntry.date);
+
 	 // user can only submit one album
-	 if (this.state.results.length === 1) {
 		 $.ajax({
 			 url: '/querydb',
 			 type: 'POST',
@@ -102,27 +103,16 @@ export default class CreateImpressionForm extends Component {
 			 contentType: 'application/json',
 			 data: JSON.stringify(newEntry),
 			 success: (results) => {
-				 console.log('SUCCESS!', results)
-				 // assigns current date to state
-				 // clears previously set state
-				 var date = this.setDate();
-				 this.setState({
-					 term: '',
-					 results: [],
-					 selectedListenDate: date
-				 });
-					// gets user entries from db and rerenders entry list
-				 console.log('calling getUserEntries from search.jsx')
+				 console.log('Success posting to /querydb. ', results)
 				 this.props.getUserEntries();
 				 // clear the search bar
 				 $('.search-bar').val('');
   		 },
   			 error: function (error) {
-  				 console.log(error);
+  				 console.log('Error:', error);
   				 return;
   			 }
   		 });
-  	 }
    }
 
   componentWillMount() {
@@ -134,18 +124,21 @@ export default class CreateImpressionForm extends Component {
 
   render() {
     return(
-      <div>
-				<RaisedButton label="Dialog"
-					onTouchTap={() => { this.setState({currForm: 'AlbumSelect'}); } } />
+      <div style={{float: 'right'}}>
+				<RaisedButton label="+"
+					onTouchTap={() => { this.setState({currForm: 'AlbumSelect'}); } }
+					backgroundColor='#254E70' labelColor='#fff'/>
 				<AlbumSelect handleStateChange={this.handleStateChange.bind(this)} currForm={this.state.currForm}
 					iTunesSearch={this.iTunesSearch.bind(this)} searchResults={this.state.searchResults}/>
 				 <ImpressionCreate handleStateChange={this.handleStateChange.bind(this)} currForm={this.state.currForm} />
 				<RatingCreate handleStateChange={this.handleStateChange.bind(this)} currForm={this.state.currForm}
-					addNewEntry={()=> this.addNewEntry}/>
+					addNewEntry={this.addNewEntry.bind(this)}/>
 				<Snackbar
           open={this.state.snackbar}
           message="You've created an impression"
           autoHideDuration={2000}
+					backgroundColor='#254E70'
+					labelColor='#fff'
           onRequestClose={ () => this.setState({snackbar: false}) }
         />
       </div>
