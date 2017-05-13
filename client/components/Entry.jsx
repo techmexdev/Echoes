@@ -11,7 +11,6 @@ import $ from 'jquery';
 import moment from 'moment';
 import UpdateBox from './UpdateBox.jsx';
 
-
 const style = {
   height: 100,
   width: 100,
@@ -27,8 +26,6 @@ class Entry extends React.Component {
       months:["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
       month:'',
       albumInfo : {status: 'UNREQUESTED'}, ///UNREQUESTED LOADING ERROR DATA
-      song: {songUrl: '', songId: ''},
-      songError: null,
     }
   }
 
@@ -40,7 +37,7 @@ class Entry extends React.Component {
 
   getAlbumInfoItunes(album) {
     this.setState({
-      albumInfo: {status: 'LOADING'}
+      albumInfo: {status: 'LOADING', song: {songUrl: '', songId: ''} }
     });
     var searchAlbumUrl = 'https://itunes.apple.com/search?term=?$' +
                          this.props.title.split(' ').join('%20') +
@@ -92,30 +89,32 @@ class Entry extends React.Component {
 
   }
 
-  playSong(songId) {
-    var searchSongUrl = 'http://itunes.apple.com/us/lookup?id=' + songId;
-    $.ajax({
-      url: searchSongUrl,
-      data: {
-        format: 'json'
-      },
-      type: 'GET',
-      dataType: 'jsonp',
-      success: (data) => {
-        this.setState(
-          {song: {songUrl: data.results[0].previewUrl, songId: data.results[0].trackId}
-        })
-      },
-      error: (err) => {
-        this.setState(
-          songError: 'Error retrieving song',
-        );
-      }
-    });
-  }
+  // playSong(songId) {
+  //   var searchSongUrl = 'http://itunes.apple.com/us/lookup?id=' + songId;
+  //   this.setState({song: {songUrl: '', songId: ''}});
+  //   $.ajax({
+  //     url: searchSongUrl,
+  //     data: {
+  //       format: 'json'
+  //     },
+  //     type: 'GET',
+  //     dataType: 'jsonp',
+  //     success: (data) => {
+  //       this.setState(
+  //         {song: {songUrl: data.results[0].previewUrl, songId: data.results[0].trackId}
+  //       })
+  //     },
+  //     error: (err) => {
+  //       this.setState({
+  //         songError: 'Error retrieving song',
+  //       });
+  //     }
+  //   });
+  // }
 
   render () {
     var statusAlbum = this.state.albumInfo.status;
+    console.log('rendering ...', this.state);
     return (
       <div>
         {/* Pop-Up of Album info */}
@@ -132,10 +131,10 @@ class Entry extends React.Component {
           modal={false}
           autoScrollBodyContent={true}
           open={statusAlbum !== 'UNREQUESTED'}
-          onRequestClose={()=>this.setState({albumInfo: {status:'UNREQUESTED'}, song: {songUrl:"", songId:""} })}
+          onRequestClose={()=>this.setState({albumInfo: {status:'UNREQUESTED'} })}
         >
           {statusAlbum === 'LOADING' && <CircularProgress size={50} color={lightBlue50} />}
-          {statusAlbum === 'ERROR' && ' A loading error has occurred.'}
+          {statusAlbum === 'ERROR' && ' A loading error has occurred. Sorry Dude/Dudette'}
 
           {statusAlbum === 'DATA' &&
             <div className='container-list tableDiv'>
@@ -169,12 +168,14 @@ class Entry extends React.Component {
                     <TableRow key={song.trackId}>
                       <TableRowColumn colSpan="1">{+index + 1}</TableRowColumn>
                       <TableRowColumn colSpan="4">
-                        <a onClick={(e)=>{e.preventDefault(); this.playSong(song.trackId);}}
-                          style={song.trackId === this.state.song.songId ? { textDecoration: 'none', color: '#555', pointerEvents: 'none' } :
+                        <a onClick={(e)=>{e.preventDefault(); this.props.playSong(song.trackId);}}
+                          style={song.trackId === this.props.song.songId ? { textDecoration: 'none', color: '#555', pointerEvents: 'none' } :
                           {cursor: 'pointer'} }
                           >{song.trackName}</a>
-                          {song.trackId === this.state.song.songId && <br />}
-                          {song.trackId === this.state.song.songId && <audio src={this.state.song.songUrl} autoPlay controls></audio>}
+                          {song.trackId === this.props.song.songId && <br />}
+                          
+                          {/*song.trackId === this.props.song.songId 
+                            && <audio src={this.props.song.songUrl} autoPlay controls></audio>*/}
                       </TableRowColumn>
                       <TableRowColumn colSpan="1">
                         {song.trackTimeMillis && Math.floor(song.trackTimeMillis / 1000 / 60)}:{song.trackTimeMillis && (Math.floor(song.trackTimeMillis / 1000 % 60) >= 10? '' : '0') + Math.floor(song.trackTimeMillis / 1000 % 60)}
@@ -185,7 +186,9 @@ class Entry extends React.Component {
             </Table>
             </div>
           }
+          {/*<audio src={this.props.song.songUrl} autoPlay></audio>*/}
         </Dialog>
+        
 
 
         <TableRow
@@ -199,7 +202,11 @@ class Entry extends React.Component {
             <span className='year'>{this.props.date.slice(0,4)}</span>
           </TableRowColumn>
           <TableRowColumn colSpan="2" style={{ width: '200px'}}>
-            <h3><img className='albumArt' src={this.props.art_url100} onClick={(e)=>{e.preventDefault(); this.getAlbumInfoItunes(this.props.album);}} /></h3>
+            <h3><img className='albumArt' src={this.props.art_url100} 
+                onClick={(e)=>{
+                  e.preventDefault(); 
+                  this.getAlbumInfoItunes(this.props.album);
+                }} /></h3>
           </TableRowColumn>
           <TableRowColumn colSpan="2" style={{ width: '400px', whiteSpace: 'normal' }}>
               <h4>{this.props.title}</h4>
@@ -227,6 +234,7 @@ class Entry extends React.Component {
                        deleteUserEntries={this.props.deleteUserEntries}/>
           </TableRowColumn>
         </TableRow>
+        
       </div>
     );
   };
