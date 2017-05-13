@@ -174,7 +174,9 @@ class Entry extends React.Component {
                           >{song.trackName}</a>
                           {song.trackId === this.props.song.songId && <br />}
 
-                          {/*song.trackId === this.props.song.songId
+                          
+                          {/*song.trackId === this.props.song.songId 
+
                             && <audio src={this.props.song.songUrl} autoPlay controls></audio>*/}
                       </TableRowColumn>
                       <TableRowColumn colSpan="1">
@@ -188,6 +190,7 @@ class Entry extends React.Component {
           }
           {/*<audio src={this.props.song.songUrl} autoPlay></audio>*/}
         </Dialog>
+        
 
 
 
@@ -202,9 +205,11 @@ class Entry extends React.Component {
             <span className='year'>{this.props.date.slice(0,4)}</span>
           </TableRowColumn>
           <TableRowColumn colSpan="2" style={{ width: '200px'}}>
-            <h3><img className='albumArt' src={this.props.art_url100}
+
+            <h3><img className='albumArt' src={this.props.art_url100} 
                 onClick={(e)=>{
-                  e.preventDefault();
+                  e.preventDefault(); 
+
                   this.getAlbumInfoItunes(this.props.album);
                 }} /></h3>
           </TableRowColumn>
@@ -234,6 +239,8 @@ class Entry extends React.Component {
                        deleteUserEntries={this.props.deleteUserEntries}/>
           </TableRowColumn>
         </TableRow>
+
+        
 
       </div>
     );
