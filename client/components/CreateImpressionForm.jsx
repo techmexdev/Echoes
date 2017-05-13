@@ -23,7 +23,7 @@ export default class CreateImpressionForm extends Component {
       currForm: 'none',
       album: '',
       impression: '',
-      rating: 0,
+      rating: 5,
 			snackbar: false
     }
   }
@@ -48,7 +48,6 @@ export default class CreateImpressionForm extends Component {
 			type: 'GET',
 			dataType: 'jsonp',
 			success: (data) => {
-				console.log('Album search results: ', data.results);
 				// changes state of results, triggering view change
 				this.setState({ searchResults: [] }, () => {
 					data.results.forEach(item => {
@@ -91,10 +90,10 @@ export default class CreateImpressionForm extends Component {
 	}
 
 	addNewEntry () {
+		let app = this;
 	 // send object with keys album and date
 	 const date = moment(new Date()).format('YYYY-MM-DD');
-	 var newEntry = {album: this.state.album, date: date.slice(0,10)};
-	 console.log('Add new entry. Album', newEntry.album, 'Date: ', newEntry.date);
+	 var newEntry = {album: app.state.album, date: date.slice(0,10)};
 
 	 // user can only submit one album
 		 $.ajax({
@@ -103,26 +102,17 @@ export default class CreateImpressionForm extends Component {
 			 dataType: 'text',
 			 contentType: 'application/json',
 			 data: JSON.stringify(newEntry),
-			 async: false,
 			 success: (response) => {
-				 const json = JSON.parse(response)
-				 console.log('resposne', json)
-				 console.log('response id', json.id)
-				 const body = Object.assign({}, newEntry, {
-					 id: json.id,
-					 impression: this.state.impression,
-					 rating: this.state.rating
-				 });
+				 var json = JSON.parse(response);
+				 app.props.updateUserEntries(+json, app.state.rating, app.state.impression, ()=> {
+					 this.props.getUserEntries();
+				 })
 
-				 $.ajax({
-					 	url: '/querydb/update',
-					 	type: 'POST',
-					 	dataType: 'text',
-					 	contentType: 'application/json',
-					 	data: JSON.stringify(body),
-  		 		});
-				}
-			});
+				},
+			error: (error)=> {
+				console.log('INSER ALBUM ERROR', error);
+			}
+			})
    }
 
   componentWillMount() {

@@ -263,7 +263,8 @@ class App extends React.Component {
         <div className="container-fluid app">
           <header className="navbar">
             <div><h2 className="greeting">{this.greetUser()}</h2></div>
-            <CreateImpressionForm />
+            <CreateImpressionForm updateUserEntries={this.updateUserEntries}
+              getUserEntries={this.getUserEntries} />
             <a href="/signout" className='navbar-right signout'>
               <button className="btn btn-default landing"><span>Sign Out</span></button>
             </a>

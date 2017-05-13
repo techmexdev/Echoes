@@ -22,7 +22,6 @@ router.get('/', function (req, res) {
       .orderBy('album_impression.date', 'desc')
       .then(function (result) {
         // send the result back to the user
-        console.log(result);
         res.status(200).send(result);
       })
       .catch(function (err) {
@@ -43,7 +42,7 @@ function insertIfNeeded(table, fields, keys, errMessage) {
     }
   })
   .catch(function(e){
-    console.log(errMessage, e);
+    console.log('', errMessage, e);
     throw e;
   });
 }
@@ -75,9 +74,13 @@ router.post('/', function(req, res) {
           insertIfNeeded('album_impression',
                           { user_id: userId, album_id: albumId, date:date },
                           { user_id: userId, album_id: albumId, date:date })
-          .then((id)=>{res.status(201);
-            res.send(id[0]); })
-          .catch((e)=>res.status(401).send('error occurred' + e));
+          .then((id)=>{
+            var i = id[0].id || id[0];
+            res.status(201).send(JSON.stringify(i));
+          })
+          .catch((e)=>{
+            res.status(401).send('error occurred' + e)
+          });
         })
       })
   })
@@ -92,8 +95,6 @@ router.post('/update', function (req, res) {
   var id = Number(impress.id);
   var rating = Number(impress.rating);
   var impression = impress.impression;
-  console.log('-----------> body on /update', req.body);
-  console.log('------------> Impression, ', impression)
   // if impression exists and rating doesn't
   if (impression && !rating) {
     knex('album_impression')
