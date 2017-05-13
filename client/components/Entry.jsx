@@ -173,8 +173,10 @@ class Entry extends React.Component {
                           {cursor: 'pointer'} }
                           >{song.trackName}</a>
                           {song.trackId === this.props.song.songId && <br />}
+
                           
                           {/*song.trackId === this.props.song.songId 
+
                             && <audio src={this.props.song.songUrl} autoPlay controls></audio>*/}
                       </TableRowColumn>
                       <TableRowColumn colSpan="1">
@@ -191,6 +193,7 @@ class Entry extends React.Component {
         
 
 
+
         <TableRow
           key={this.props.index}
           style={{ height: '122px', width: '75%', textAlign: 'left' }}
@@ -202,9 +205,11 @@ class Entry extends React.Component {
             <span className='year'>{this.props.date.slice(0,4)}</span>
           </TableRowColumn>
           <TableRowColumn colSpan="2" style={{ width: '200px'}}>
+
             <h3><img className='albumArt' src={this.props.art_url100} 
                 onClick={(e)=>{
                   e.preventDefault(); 
+
                   this.getAlbumInfoItunes(this.props.album);
                 }} /></h3>
           </TableRowColumn>
@@ -234,7 +239,9 @@ class Entry extends React.Component {
                        deleteUserEntries={this.props.deleteUserEntries}/>
           </TableRowColumn>
         </TableRow>
+
         
+
       </div>
     );
   };

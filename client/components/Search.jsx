@@ -91,7 +91,6 @@ class Search extends React.Component {
 						selectedListenDate: date
 					});
           // gets user entries from db and rerenders entry list
-					console.log('calling getUserEntries from search.jsx')
 					this.props.getUserEntries();
 					// clear the search bar
 					$('.search-bar').val('');
