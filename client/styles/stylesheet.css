@@ -101,7 +101,7 @@ div.col-md-6.text-center {
 .navbar-fixed-bottom.landing {
   color: #4b6ecc;
   text-align: right;
-  padding: 24px;
+  padding: 15px;
   background: #fff;
   vertical-align: middle;
 }
@@ -117,8 +117,8 @@ h1.title {
 .logo {
   display: block;
   margin: auto;
-  margin-top: -50px;
-  margin-bottom: -30px;
+  margin-top: -5px;
+  margin-bottom: -5px;
 }
 
 .github-octocat {
@@ -261,10 +261,10 @@ h2.greeting {
   margin-bottom: 0px;
 }
 
-.header.logo {
-  width: 25%;
-	margin-top:-80px;
-	margin-bottom:-20px;
+header>img {
+  width: 20%;
+	margin: auto;
+  display: block;
 }
 
 .albumArt {
