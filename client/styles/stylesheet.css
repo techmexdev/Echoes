@@ -176,17 +176,19 @@ a.signout {
 	display: none;
 }
 
-.btn-group button {
-	margin-left:100px;
+a.remove {
+	margin-right: 5px;
 }
-button.update,
+
+.btn-group button {
+	margin-left: 10px;
+}
 button.remove {
 	margin-bottom: 20px;
-	margin-right: 20px;
+	margin-right: 5px;
 	background-color: #607D8B;
 }
 
-button.update:hover,
 button.remove:hover {
 	background-color: #19354c;
 }
@@ -211,7 +213,7 @@ table tr.entry:hover {
 }
 
 div.impression {
-	font-size: 17px;
+	font-size: 15px;
 }
 
 div.entries-container {
@@ -243,6 +245,10 @@ div.col-md-6.text-center {
 
 .search-bar {
   width: 100%
+}
+
+.container-list {
+	width: '71%'
 }
 
 .container-fluid.app {
@@ -343,7 +349,8 @@ a.signout {
 }
 
 .btn-group button {
-	margin-left:100px;
+	margin-left:10px;
+	margin-right: 10px;
 }
 
 button.update {
