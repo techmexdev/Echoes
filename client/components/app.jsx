@@ -7,6 +7,7 @@ import $ from 'jquery';
 import SortEntries from './SortEntries.jsx'
 import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';
+import AudioPlayer from 'react-responsive-audio-player';
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -37,6 +38,8 @@ class App extends React.Component {
       sortByArtist: false,
       sortByRatingHighest: false,
       sortByRatingLowest: false,
+      song: {songUrl: '', songId: ''},
+      songError: ''
     };
     // Bindings
     this.disableSorts = this.disableSorts.bind(this);
@@ -157,6 +160,29 @@ class App extends React.Component {
       }
     })
   }
+  
+  playSong(songId) {
+    var searchSongUrl = 'http://itunes.apple.com/us/lookup?id=' + songId;
+    this.setState({song: {songUrl: '', songId: ''}});
+    $.ajax({
+      url: searchSongUrl,
+      data: {
+        format: 'json'
+      },
+      type: 'GET',
+      dataType: 'jsonp',
+      success: (data) => {
+        this.setState(
+          {song: {songUrl: data.results[0].previewUrl, songId: data.results[0].trackId}
+        })
+      },
+      error: (err) => {
+        this.setState({
+          songError: 'Error retrieving song',
+        });
+      }
+    });
+  }
 
 
   // renders the app to the DOM
@@ -193,11 +219,21 @@ class App extends React.Component {
                     updateUserEntries={this.updateUserEntries}
                     getUserEntries={this.getUserEntries}
                     deleteUserEntries={this.deleteUserEntries}
+                    playSong={this.playSong.bind(this)}
+                    song={this.state.song}
                   />
               </div>
             </div>
           </div>
+          {console.log('songurl before rendering: ', this.state)}
+          {this.state.song.songUrl !== ''  && 
+          <AudioPlayer style={{ position: 'fixed', bottom: 0, right: 0, width: '100%' }} 
+                            playlist={[{url: this.state.song.songUrl, displayText:''}]}
+                            autoplay={true}
+                            audioElementRef={()=>console.log('mounting or ummounting player')}
+                          />}
         </div>
+        
      </MuiThemeProvider>
     )
   }

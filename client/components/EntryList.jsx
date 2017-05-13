@@ -122,6 +122,8 @@ class EntryList extends React.Component {
                     deleteUserEntries={this.props.deleteUserEntries}
                     key={entry.date + entry.id}
                     album={entry}
+                    playSong={this.props.playSong}
+                    song={this.props.song}
                   />
                 ))}
               </TableBody>
