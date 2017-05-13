@@ -60,7 +60,7 @@ class App extends React.Component {
   // when the component loads successfully
   componentWillMount() {
     // load all of the user's data
-    this.getUserEntries();
+    this.getUserEntries(true);
   }
 
   // disables all sorting states
@@ -107,7 +107,7 @@ class App extends React.Component {
     return oneYearEntries;
   }
   //gets all users entries
-  getUserEntries () {
+  getUserEntries(firstRender) {
     var app = this;
     $.ajax({
       url: '/querydb',
@@ -116,10 +116,13 @@ class App extends React.Component {
         // sets state of all entries
         // sets current user name
         if (response.length) {
-          let oneYearEnt = app.findOneYearEntries(response);
-          let impressState = true;
-          if (oneYearEnt.length <= 0) {
-            impressState = false;
+          let oneYearEnt = [];
+          let impressState = false;
+          if (firstRender) {
+            oneYearEnt = app.findOneYearEntries(response);
+            if (oneYearEnt.length > 0) {
+              impressState = true;
+            }
           }
           app.setState({
             allEntries: response,
@@ -218,6 +221,7 @@ class App extends React.Component {
               title="1 Year Ago Today..."
               modal={false}
               open={this.state.impressThrowBack}
+              // onRequestClose={this.handleClose}
               actions= {
                 <FlatButton
                   label="Close"
