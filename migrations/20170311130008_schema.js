@@ -54,7 +54,6 @@ exports.up = function(knex, Promise) {
 
 exports.down = function(knex, Promise) {
   return Promise.all([
-    knex.schema.dropTable('listen_date'),
     knex.schema.dropTable('album_impression'),
     knex.schema.dropTable('song'),
     knex.schema.dropTable('album'),

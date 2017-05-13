@@ -98,21 +98,21 @@ class UpdateBox extends React.Component {
               {/* update button -- do not remove a tags.
                 They are necessary to maintain working buttons while keeping bootstrap styling */}
               <div>
-                <button className='update btn btn-default'>
                   <a onClick={this.openModal}>
+                    <button className='update btn btn-default'>
                     {/* pencil icon */}
                     <span className='glyphicon glyphicon-pencil'></span>
-                  </a>
-                </button>
+                  </button>
+                </a>
               </div>
               {/*  delete button */}
               <div>
-                <button className='remove btn btn-default'>
-                  <a onClick={this.handleClickToDelete}>
+                <a onClick={this.handleClickToDelete}>
+                  <button className='remove btn btn-default'>
                     {/* remove button */}
                     <span className='glyphicon glyphicon-remove-circle'></span>
-                  </a>
-                </button>
+                  </button>
+                </a>
               </div>
             </div>
           )}

@@ -1,12 +1,16 @@
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Dialog from 'material-ui/Dialog';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import FlatButton from 'material-ui/FlatButton';
 import { lightBlue50, indigo900, blueGrey300, blueGrey400, blueGrey500, blueGrey900 } from 'material-ui/styles/colors';
 import injectTapEventPlugin from "react-tap-event-plugin";
 import $ from 'jquery';
+import moment from 'moment';
 import SortEntries from './SortEntries.jsx'
 import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';
+import ThrowBackImpression from './ThrowBackImpression.jsx';
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
@@ -25,7 +29,10 @@ const muiTheme = getMuiTheme({
     height: 50,
   },
 });
+<<<<<<< HEAD
 injectTapEventPlugin();
+=======
+>>>>>>> 55dbb97c65bb74e331d2a60607c6ca08a1d8b006
 
 class App extends React.Component {
   constructor (props) {
@@ -35,16 +42,24 @@ class App extends React.Component {
       viewingEntry: '',
       allEntries: [],
       searchResults: [],
+      throwBackEntries: [],
       currentUser: '',
       sortByAlbum: false,
       sortByArtist: false,
       sortByRatingHighest: false,
       sortByRatingLowest: false,
+
+      impressThrowBack: false,
+      song: {songUrl: '', songId: ''},
+      songError: '',
+
     };
     // Bindings
     this.disableSorts = this.disableSorts.bind(this);
     this.deleteUserEntries = this.deleteUserEntries.bind(this);
+    this.findOneYearEntries = this.findOneYearEntries.bind(this);
     this.getUserEntries = this.getUserEntries.bind(this);
+    this.handleClose = this.handleClose.bind(this);
     this.toggleSortAlbum = this.toggleSortAlbum.bind(this);
     this.toggleSortArtist = this.toggleSortArtist.bind(this);
     this.toggleSortLowest = this.toggleSortLowest.bind(this);
@@ -52,11 +67,12 @@ class App extends React.Component {
     this.updateUserEntries = this.updateUserEntries.bind(this);
   }
   // when the component loads successfully
-  componentWillMount () {
+  componentWillMount() {
     // load all of the user's data
-    this.getUserEntries();
+    this.getUserEntries(true);
   }
 
+  // disables all sorting states
   disableSorts(){
     this.setState({
       sortByAlbum: false,
@@ -82,7 +98,25 @@ class App extends React.Component {
       }
     })
   }
-  getUserEntries () {
+
+  findOneYearEntries(entries) {
+    let oneYearEntries = [];
+    let todayDate = new Date();
+    let formattedDate = moment(todayDate).format('YYYY-MM-DD');
+    let dateArr = formattedDate.split('');
+    dateArr[3] = (+dateArr[3] - 1).toString();
+    let historyDate = dateArr.join('');
+
+    for (let idx in entries) {
+      let entryDay = entries[idx].date.slice(0, 10);
+      if (historyDate === entryDay) {
+        oneYearEntries.push(entries[idx]);
+      }
+    }
+    return oneYearEntries;
+  }
+  //gets all users entries
+  getUserEntries(firstRender) {
     var app = this;
     $.ajax({
       url: '/querydb',
@@ -91,9 +125,19 @@ class App extends React.Component {
         // sets state of all entries
         // sets current user name
         if (response.length) {
+          let oneYearEnt = [];
+          let impressState = false;
+          if (firstRender) {
+            oneYearEnt = app.findOneYearEntries(response);
+            if (oneYearEnt.length > 0) {
+              impressState = true;
+            }
+          }
           app.setState({
             allEntries: response,
-            currentUser: response[0].user
+            currentUser: response[0].user,
+            throwBackEntries: oneYearEnt,
+            impressThrowBack: impressState,
           })
         } else {
           app.setState({
@@ -116,6 +160,12 @@ class App extends React.Component {
       // new users are greetedwith Hello
       return `Hello!`
     }
+  }
+
+  handleClose() {
+    this.setState({
+      impressThrowBack: false,
+    });
   }
 
   toggleSortAlbum() {
@@ -161,6 +211,52 @@ class App extends React.Component {
     })
   }
 
+  playSong(songId) {
+    var searchSongUrl = 'http://itunes.apple.com/us/lookup?id=' + songId;
+    this.setState({song: {songUrl: '', songId: ''}});
+    $.ajax({
+      url: searchSongUrl,
+      data: {
+        format: 'json'
+      },
+      type: 'GET',
+      dataType: 'jsonp',
+      success: (data) => {
+        this.setState(
+          {song: {songUrl: data.results[0].previewUrl, songId: data.results[0].trackId}
+        })
+      },
+      error: (err) => {
+        this.setState({
+          songError: 'Error retrieving song',
+        });
+      }
+    });
+  }
+
+  playSong(songId) {
+    var searchSongUrl = 'http://itunes.apple.com/us/lookup?id=' + songId;
+    this.setState({song: {songUrl: '', songId: ''}});
+    $.ajax({
+      url: searchSongUrl,
+      data: {
+        format: 'json'
+      },
+      type: 'GET',
+      dataType: 'jsonp',
+      success: (data) => {
+        this.setState(
+          {song: {songUrl: data.results[0].previewUrl, songId: data.results[0].trackId}
+        })
+      },
+      error: (err) => {
+        this.setState({
+          songError: 'Error retrieving song',
+        });
+      }
+    });
+  }
+
 
   // renders the app to the DOM
   render() {
@@ -201,7 +297,18 @@ class App extends React.Component {
             </table>
             </div>
           </div>
+
+          {this.state.song.songUrl !== ''  &&
+          <AudioPlayer style={{ position: 'fixed', bottom: 0, right: 0, width: '100%' }}
+
+                            playlist={[{url: this.state.song.songUrl, displayText:''}]}
+                            autoplay={true}
+                            audioElementRef={()=>console.log('mounting or ummounting player')}
+                          />}
         </div>
+
+
+
      </MuiThemeProvider>
     )
   }

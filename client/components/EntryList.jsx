@@ -90,14 +90,14 @@ class EntryList extends React.Component {
             adjustForCheckbox={false}
           >
             <TableRow>
-              <TableHeaderColumn colSpan="1" tooltip="The Date">
+              <TableHeaderColumn colSpan="1" >
                 <h3 className='glyphicon glyphicon-calendar'> </h3>
               </TableHeaderColumn>
-              <TableHeaderColumn colSpan="2" tooltip="Album"><h3>Album</h3></TableHeaderColumn>
-              <TableHeaderColumn colSpan="2" tooltip="Album"></TableHeaderColumn>
-              <TableHeaderColumn colSpan="4" tooltip="Impression"><h3>Impression</h3></TableHeaderColumn>
-              <TableHeaderColumn colSpan="3" tooltip="Rating"><h3>Rating</h3></TableHeaderColumn>
-              <TableHeaderColumn colSpan="3" tooltip="Edit"></TableHeaderColumn>
+              <TableHeaderColumn colSpan="2" ><h3>Album</h3></TableHeaderColumn>
+              <TableHeaderColumn colSpan="2" ></TableHeaderColumn>
+              <TableHeaderColumn colSpan="4" ><h3>Impression</h3></TableHeaderColumn>
+              <TableHeaderColumn colSpan="3" ><h3>Rating</h3></TableHeaderColumn>
+              <TableHeaderColumn colSpan="3" ></TableHeaderColumn>
             </TableRow>
           </TableHeader>
             <TableBody
@@ -123,6 +123,8 @@ class EntryList extends React.Component {
                     deleteUserEntries={this.props.deleteUserEntries}
                     key={entry.date + entry.id}
                     album={entry}
+                    playSong={this.props.playSong}
+                    song={this.props.song}
                   />
                 ))}
               </TableBody>

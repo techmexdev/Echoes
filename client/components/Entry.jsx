@@ -27,8 +27,6 @@ class Entry extends React.Component {
       months:["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
       month:'',
       albumInfo : {status: 'UNREQUESTED'}, ///UNREQUESTED LOADING ERROR DATA
-      song: {songUrl: '', songId: ''},
-      songError: null,
     }
   }
 
@@ -40,7 +38,7 @@ class Entry extends React.Component {
 
   getAlbumInfoItunes(album) {
     this.setState({
-      albumInfo: {status: 'LOADING'}
+      albumInfo: {status: 'LOADING', song: {songUrl: '', songId: ''} }
     });
     var searchAlbumUrl = 'https://itunes.apple.com/search?term=?$' +
                          this.props.title.split(' ').join('%20') +
@@ -94,6 +92,7 @@ class Entry extends React.Component {
 
   playSong(songId) {
     var searchSongUrl = 'http://itunes.apple.com/us/lookup?id=' + songId;
+    this.setState({song: {songUrl: '', songId: ''}});
     $.ajax({
       url: searchSongUrl,
       data: {
@@ -107,15 +106,16 @@ class Entry extends React.Component {
         })
       },
       error: (err) => {
-        this.setState(
+        this.setState({
           songError: 'Error retrieving song',
-        );
+        });
       }
     });
   }
 
   render () {
     var statusAlbum = this.state.albumInfo.status;
+    console.log('rendering ...', this.state);
     return (
       <div>
         {/* Pop-Up of Album info */}
@@ -132,10 +132,10 @@ class Entry extends React.Component {
           modal={false}
           autoScrollBodyContent={true}
           open={statusAlbum !== 'UNREQUESTED'}
-          onRequestClose={()=>this.setState({albumInfo: {status:'UNREQUESTED'}, song: {songUrl:"", songId:""} })}
+          onRequestClose={()=>this.setState({albumInfo: {status:'UNREQUESTED'} })}
         >
           {statusAlbum === 'LOADING' && <CircularProgress size={50} color={lightBlue50} />}
-          {statusAlbum === 'ERROR' && ' A loading error has occurred.'}
+          {statusAlbum === 'ERROR' && ' A loading error has occurred. Sorry Dude/Dudette'}
 
           {statusAlbum === 'DATA' &&
             <div className='container-list tableDiv'>
@@ -145,10 +145,10 @@ class Entry extends React.Component {
                   adjustForCheckbox={false}
                 >
                   <TableRow style={{width:'100px'}}>
-                    <TableHeaderColumn colSpan="3" >
+                    <TableHeaderColumn colSpan="3" style={{ width: '200px'}} >
                       <h3><img className='albumArt' src={this.props.art_url100} onClick={(e)=>{e.preventDefault(); this.getAlbumInfoItunes(this.props.album);}} /></h3>
                     </TableHeaderColumn>
-                    <TableHeaderColumn colSpan="3" style={{ width: '400px', whiteSpace: 'normal', verticalAlign:'middle' }} tooltip="Album Info">
+                    <TableHeaderColumn colSpan="3" style={{ width: '400px', whiteSpace: 'normal', verticalAlign:'middle' }}>
                       <h4>{this.props.title}</h4>
                       <h5>{this.props.artist}</h5>
                       <p>{this.props.year}</p>
@@ -156,9 +156,9 @@ class Entry extends React.Component {
                     </TableHeaderColumn>
                   </TableRow>
                   <TableRow style={{ width: '100%', verticalAlign:'middle' }}>
-                    <TableHeaderColumn colSpan="1" tooltip="ContentInbox" style={{ width: '200px', 'padding-left': '18px', verticalAlign: 'middle' }}><ContentInbox /></TableHeaderColumn>
-                    <TableHeaderColumn colSpan="4" tooltip="Song Name" style={{ width: '800px', 'padding-left': '60px', verticalAlign: 'middle'  }}>Name</TableHeaderColumn>
-                    <TableHeaderColumn colSpan="1" tooltip="Time" style={{ width: '200px', 'padding-left': '60px', verticalAlign: 'middle'  }}>Time</TableHeaderColumn>
+                    <TableHeaderColumn colSpan="1" style={{ width: '200px', 'padding-left': '18px', verticalAlign: 'middle' }}><ContentInbox /></TableHeaderColumn>
+                    <TableHeaderColumn colSpan="4" style={{ width: '800px', 'padding-left': '60px', verticalAlign: 'middle' }}>Name</TableHeaderColumn>
+                    <TableHeaderColumn colSpan="1" style={{ width: '200px', 'padding-left': '60px', verticalAlign: 'middle' }}>Time</TableHeaderColumn>
                   </TableRow>
                 </TableHeader>
                 <TableBody
@@ -169,12 +169,16 @@ class Entry extends React.Component {
                     <TableRow key={song.trackId}>
                       <TableRowColumn colSpan="1">{+index + 1}</TableRowColumn>
                       <TableRowColumn colSpan="4">
-                        <a onClick={(e)=>{e.preventDefault(); this.playSong(song.trackId);}}
-                          style={song.trackId === this.state.song.songId ? { textDecoration: 'none', color: '#555', pointerEvents: 'none' } :
+                        <a onClick={(e)=>{e.preventDefault(); this.props.playSong(song.trackId);}}
+                          style={song.trackId === this.props.song.songId ? { textDecoration: 'none', color: '#555', pointerEvents: 'none' } :
                           {cursor: 'pointer'} }
                           >{song.trackName}</a>
-                          {song.trackId === this.state.song.songId && <br />}
-                          {song.trackId === this.state.song.songId && <audio src={this.state.song.songUrl} autoPlay controls></audio>}
+                          {song.trackId === this.props.song.songId && <br />}
+
+
+                          {/*song.trackId === this.props.song.songId
+
+                            && <audio src={this.props.song.songUrl} autoPlay controls></audio>*/}
                       </TableRowColumn>
                       <TableRowColumn colSpan="1">
                         {song.trackTimeMillis && Math.floor(song.trackTimeMillis / 1000 / 60)}:{song.trackTimeMillis && (Math.floor(song.trackTimeMillis / 1000 % 60) >= 10? '' : '0') + Math.floor(song.trackTimeMillis / 1000 % 60)}
@@ -185,7 +189,10 @@ class Entry extends React.Component {
             </Table>
             </div>
           }
+          {/*<audio src={this.props.song.songUrl} autoPlay></audio>*/}
         </Dialog>
+
+
 
 
         <TableRow
@@ -198,8 +205,14 @@ class Entry extends React.Component {
             <span className='day'><h4>{this.props.date.slice(8, 10)}</h4></span>
             <span className='year'>{this.props.date.slice(0,4)}</span>
           </TableRowColumn>
-          <TableRowColumn colSpan="2" style={{ width: '200px', height: 'auto'}}>
-            <h3><img className='albumArt' src={this.props.art_url100} onClick={(e)=>{e.preventDefault(); this.getAlbumInfoItunes(this.props.album);}} /></h3>
+          <TableRowColumn colSpan="2" style={{ width: '200px'}}>
+
+            <h3><img className='albumArt' src={this.props.art_url100}
+                onClick={(e)=>{
+                  e.preventDefault();
+
+                  this.getAlbumInfoItunes(this.props.album);
+                }} /></h3>
           </TableRowColumn>
           <TableRowColumn colSpan="2" style={{ width: '400px', whiteSpace: 'normal' }}>
               <h4>{this.props.title}</h4>
@@ -207,7 +220,7 @@ class Entry extends React.Component {
               <p>{this.props.year}</p>
               <p>{this.props.genre}</p>
           </TableRowColumn>
-          <TableRowColumn colSpan="4" style={{ width: '500px', 'white-space': 'normal' }}>
+          <TableRowColumn colSpan="4" style={{ width: '500px', 'whiteSpace': 'normal' }}>
             <div className="impression">{this.props.impression}</div>
           </TableRowColumn>
           <TableRowColumn colSpan="3">
@@ -227,6 +240,9 @@ class Entry extends React.Component {
                        deleteUserEntries={this.props.deleteUserEntries}/>
           </TableRowColumn>
         </TableRow>
+
+
+
       </div>
     );
   };

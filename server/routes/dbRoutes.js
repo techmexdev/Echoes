@@ -136,7 +136,6 @@ router.post('/update', function (req, res) {
 router.post('/delete', function (req, res) {
   var listenEntry = req.body; //.impressionId and .date
   //find the listen_date Entry
-
   knex('album_impression')
     .where('id', req.body.impressionId)
     .del()
