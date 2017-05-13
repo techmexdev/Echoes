@@ -89,7 +89,7 @@ class ThrowBackImpressionEntry extends React.Component {
                     />
                     <br />
                   </TableRowColumn>
-                  <TableRowColumn colSpan="3" style={{ fontSize: '20px' }}>
+                  <TableRowColumn colSpan="3" style={{ fontSize: '20px', whiteSpace: 'normal' }}>
                       {this.props.impression}
                   </TableRowColumn>
                 </TableRow>
