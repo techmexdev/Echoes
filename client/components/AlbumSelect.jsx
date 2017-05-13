@@ -53,7 +53,7 @@ export default class AlbumSelect extends Component {
                 this.props.searchResults.map( album =>
                 <GridTile
                   className={"container"}
-                  onTouchTap={ () => { this.selectAlbum(album.collectionName); } }
+                  onTouchTap={ () => { this.selectAlbum(album); } }
                   key={album.artworkUrl100}
                   title={album.collectionName}
                   subtitle={album.artistName}

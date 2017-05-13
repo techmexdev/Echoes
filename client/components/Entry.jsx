@@ -10,7 +10,7 @@ import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow
 import $ from 'jquery';
 import moment from 'moment';
 import UpdateBox from './UpdateBox.jsx';
-
+import './Entry.css';
 
 const style = {
   height: 100,
@@ -145,7 +145,7 @@ class Entry extends React.Component {
                   adjustForCheckbox={false}
                 >
                   <TableRow style={{width:'100px'}}>
-                    <TableHeaderColumn colSpan="3" style={{ width: '200px'}} tooltip='Album Art'>
+                    <TableHeaderColumn colSpan="3" >
                       <h3><img className='albumArt' src={this.props.art_url100} onClick={(e)=>{e.preventDefault(); this.getAlbumInfoItunes(this.props.album);}} /></h3>
                     </TableHeaderColumn>
                     <TableHeaderColumn colSpan="3" style={{ width: '400px', whiteSpace: 'normal', verticalAlign:'middle' }} tooltip="Album Info">
@@ -198,7 +198,7 @@ class Entry extends React.Component {
             <span className='day'><h4>{this.props.date.slice(8, 10)}</h4></span>
             <span className='year'>{this.props.date.slice(0,4)}</span>
           </TableRowColumn>
-          <TableRowColumn colSpan="2" style={{ width: '200px'}}>
+          <TableRowColumn colSpan="2" style={{ width: '200px', height: 'auto'}}>
             <h3><img className='albumArt' src={this.props.art_url100} onClick={(e)=>{e.preventDefault(); this.getAlbumInfoItunes(this.props.album);}} /></h3>
           </TableRowColumn>
           <TableRowColumn colSpan="2" style={{ width: '400px', whiteSpace: 'normal' }}>

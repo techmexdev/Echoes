@@ -44,19 +44,11 @@ exports.up = function(knex, Promise) {
       table.integer('album_id');
       table.integer('rating');
       table.string('impression');
+      table.date('date').notNullable();
       table.foreign('user_id').references('users.id');
       table.foreign('album_id').references('album.id');
-      table.unique(['user_id', 'album_id']);
+      table.unique(['user_id', 'album_id', 'date']);
     }),
-
-    //many listening dates to one album impression
-    knex.schema.createTable('listen_date', function(table) {
-      table.increments('id').primary();
-      table.integer('album_impression_id');
-      table.date('date').notNullable();
-      table.foreign('album_impression_id').references('album_impression.id');
-      table.unique(['album_impression_id', 'date']);
-    })
   ]);
 };
 

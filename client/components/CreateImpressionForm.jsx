@@ -92,7 +92,8 @@ export default class CreateImpressionForm extends Component {
 
 	addNewEntry () {
 	 // send object with keys album and date
-	 var newEntry = {album: this.state.album, date: new Date().toString().slice(0,10)};
+	 const date = moment(new Date()).format('YYYY-MM-DD');
+	 var newEntry = {album: this.state.album, date: date.slice(0,10)};
 	 console.log('Add new entry. Album', newEntry.album, 'Date: ', newEntry.date);
 
 	 // user can only submit one album
@@ -102,17 +103,26 @@ export default class CreateImpressionForm extends Component {
 			 dataType: 'text',
 			 contentType: 'application/json',
 			 data: JSON.stringify(newEntry),
-			 success: (results) => {
-				 console.log('Success posting to /querydb. ', results)
-				 this.props.getUserEntries();
-				 // clear the search bar
-				 $('.search-bar').val('');
-  		 },
-  			 error: function (error) {
-  				 console.log('Error:', error);
-  				 return;
-  			 }
-  		 });
+			 async: false,
+			 success: (response) => {
+				 const json = JSON.parse(response)
+				 console.log('resposne', json)
+				 console.log('response id', json.id)
+				 const body = Object.assign({}, newEntry, {
+					 id: json.id,
+					 impression: this.state.impression,
+					 rating: this.state.rating
+				 });
+
+				 $.ajax({
+					 	url: '/querydb/update',
+					 	type: 'POST',
+					 	dataType: 'text',
+					 	contentType: 'application/json',
+					 	data: JSON.stringify(body),
+  		 		});
+				}
+			});
    }
 
   componentWillMount() {

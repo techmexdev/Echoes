@@ -16,19 +16,10 @@ module.exports = {
                 }
             },
             {
-<<<<<<< HEAD
-                test: /.css$/,
-                loaders: ['style-loader', 'css-loader'],
-             }
-        ],
-=======
               test: /.css?$/,
               loader: ['style-loader', 'css-loader']
             }
 
         ]
->>>>>>> tmp
     }
 }
-
-console.log(module.exports.entry);
