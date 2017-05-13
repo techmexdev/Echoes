@@ -29,10 +29,7 @@ const muiTheme = getMuiTheme({
     height: 50,
   },
 });
-<<<<<<< HEAD
 injectTapEventPlugin();
-=======
->>>>>>> 55dbb97c65bb74e331d2a60607c6ca08a1d8b006
 
 class App extends React.Component {
   constructor (props) {
