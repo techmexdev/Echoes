@@ -12,7 +12,6 @@ import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';
 import ThrowBackImpression from './ThrowBackImpression.jsx';
 import AudioPlayer from 'react-responsive-audio-player';
-import ThrowBackImpression from './ThrowBackImpression.jsx';
 
 injectTapEventPlugin();
 
