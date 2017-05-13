@@ -277,7 +277,6 @@ class App extends React.Component {
               handleSortByLowest={this.toggleSortLowest}
               disableSorts={this.disableSorts}
             />
-            <Search getUserEntries={this.getUserEntries.bind(this)}/>
           </div>
           <div className="col-md-10">
             <table className="table-responsive table">
