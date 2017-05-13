@@ -145,10 +145,10 @@ class Entry extends React.Component {
                   adjustForCheckbox={false}
                 >
                   <TableRow style={{width:'100px'}}>
-                    <TableHeaderColumn colSpan="3" style={{ width: '200px'}} tooltip='Album Art'>
+                    <TableHeaderColumn colSpan="3" style={{ width: '200px'}} >
                       <h3><img className='albumArt' src={this.props.art_url100} onClick={(e)=>{e.preventDefault(); this.getAlbumInfoItunes(this.props.album);}} /></h3>
                     </TableHeaderColumn>
-                    <TableHeaderColumn colSpan="3" style={{ width: '400px', whiteSpace: 'normal', verticalAlign:'middle' }} tooltip="Album Info">
+                    <TableHeaderColumn colSpan="3" style={{ width: '400px', whiteSpace: 'normal', verticalAlign:'middle' }}>
                       <h4>{this.props.title}</h4>
                       <h5>{this.props.artist}</h5>
                       <p>{this.props.year}</p>
@@ -156,9 +156,9 @@ class Entry extends React.Component {
                     </TableHeaderColumn>
                   </TableRow>
                   <TableRow style={{ width: '100%', verticalAlign:'middle' }}>
-                    <TableHeaderColumn colSpan="1" tooltip="ContentInbox" style={{ width: '200px', 'padding-left': '18px', verticalAlign: 'middle' }}><ContentInbox /></TableHeaderColumn>
-                    <TableHeaderColumn colSpan="4" tooltip="Song Name" style={{ width: '800px', 'padding-left': '60px', verticalAlign: 'middle'  }}>Name</TableHeaderColumn>
-                    <TableHeaderColumn colSpan="1" tooltip="Time" style={{ width: '200px', 'padding-left': '60px', verticalAlign: 'middle'  }}>Time</TableHeaderColumn>
+                    <TableHeaderColumn colSpan="1" style={{ width: '200px', 'padding-left': '18px', verticalAlign: 'middle' }}><ContentInbox /></TableHeaderColumn>
+                    <TableHeaderColumn colSpan="4" style={{ width: '800px', 'padding-left': '60px', verticalAlign: 'middle' }}>Name</TableHeaderColumn>
+                    <TableHeaderColumn colSpan="1" style={{ width: '200px', 'padding-left': '60px', verticalAlign: 'middle' }}>Time</TableHeaderColumn>
                   </TableRow>
                 </TableHeader>
                 <TableBody
