@@ -11,10 +11,11 @@ import SortEntries from './SortEntries.jsx'
 import Search from './Search.jsx';
 import EntryList from './EntryList.jsx';
 import ThrowBackImpression from './ThrowBackImpression.jsx';
-
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 import CreateImpressionForm from './CreateImpressionForm.jsx';
+import AudioPlayer from 'react-responsive-audio-player';
+
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -296,11 +297,11 @@ class App extends React.Component {
           </div>
 
           {this.state.song.songUrl !== ''  &&
-          <AudioPlayer style={{ position: 'fixed', bottom: 0, right: 0, width: '100%' }}
+          <AudioPlayer style={{ position: 'fixed', bottom: 0, right: 0, width: '100%', height: '40px' }}
 
                             playlist={[{url: this.state.song.songUrl, displayText:''}]}
                             autoplay={true}
-                            audioElementRef={()=>console.log('mounting or ummounting player')}
+                            // audioElementRef={()=>console.log('mounting or ummounting player')}
                           />}
         </div>
 

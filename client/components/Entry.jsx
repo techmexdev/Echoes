@@ -27,7 +27,11 @@ class Entry extends React.Component {
       months:["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
       month:'',
       albumInfo : {status: 'UNREQUESTED'}, ///UNREQUESTED LOADING ERROR DATA
-    }
+      confirmDeletionModalActive: false,
+    };
+    this.closeModals = this.closeModals.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleClickToDelete = this.handleClickToDelete.bind(this);
   }
 
   componentWillMount () {
@@ -90,32 +94,29 @@ class Entry extends React.Component {
 
   }
 
-  playSong(songId) {
-    var searchSongUrl = 'http://itunes.apple.com/us/lookup?id=' + songId;
-    this.setState({song: {songUrl: '', songId: ''}});
-    $.ajax({
-      url: searchSongUrl,
-      data: {
-        format: 'json'
-      },
-      type: 'GET',
-      dataType: 'jsonp',
-      success: (data) => {
-        this.setState(
-          {song: {songUrl: data.results[0].previewUrl, songId: data.results[0].trackId}
-        })
-      },
-      error: (err) => {
-        this.setState({
-          songError: 'Error retrieving song',
-        });
-      }
+  closeModals() {
+    this.setState({
+      modalActive: false,
+      confirmDeletionModalActive: false
+    });
+  }
+
+  handleDelete(e) {
+    e.preventDefault();
+    this.closeModals();
+    this.props.deleteUserEntries(this.props.impressionId, this.props.date, this.props.getUserEntries);
+
+  }
+
+  handleClickToDelete(e) {
+    e.preventDefault();
+    this.setState({
+      confirmDeletionModalActive: true,
     });
   }
 
   render () {
     var statusAlbum = this.state.albumInfo.status;
-    console.log('rendering ...', this.state);
     return (
       <div>
         {/* Pop-Up of Album info */}
@@ -138,7 +139,7 @@ class Entry extends React.Component {
           {statusAlbum === 'ERROR' && ' A loading error has occurred. Sorry Dude/Dudette'}
 
           {statusAlbum === 'DATA' &&
-            <div className='container-list tableDiv'>
+            <div className='container-list'>
               <Table height='auto' width='100%' fixedHeader style={{backgroundColor: 'blueGrey900'}}>
                 <TableHeader
                   displaySelectAll={false}
@@ -197,16 +198,16 @@ class Entry extends React.Component {
 
         <TableRow
           key={this.props.index}
-          style={{ height: '122px', width: '75%', textAlign: 'left' }}
+          style={{ height: '122px', width: '100%', textAlign: 'left' }}
           hoverable={true}
         >
-          <TableRowColumn colSpan="2" style={{ width: '150px' }}>
+          <TableRowColumn colSpan="1" style={{ width: '150px', paddingRight: '10px' }}>
             <span className='month'><h4>{moment.months(this.state.month - 1)}</h4> </span>
             <span className='day'><h4>{this.props.date.slice(8, 10)}</h4></span>
             <span className='year'>{this.props.date.slice(0,4)}</span>
           </TableRowColumn>
-          <TableRowColumn colSpan="2" style={{ width: '200px'}}>
 
+          <TableRowColumn colSpan="2" style={{ width: '110px', padding: '0'}}>
             <h3><img className='albumArt' src={this.props.art_url100}
                 onClick={(e)=>{
                   e.preventDefault();
@@ -214,13 +215,13 @@ class Entry extends React.Component {
                   this.getAlbumInfoItunes(this.props.album);
                 }} /></h3>
           </TableRowColumn>
-          <TableRowColumn colSpan="2" style={{ width: '400px', whiteSpace: 'normal' }}>
+          <TableRowColumn colSpan="2" style={{ width: '320px', whiteSpace: 'normal', paddingLeft: '5px' }}>
               <h4>{this.props.title}</h4>
               <h5>{this.props.artist}</h5>
               <p>{this.props.year}</p>
               <p>{this.props.genre}</p>
           </TableRowColumn>
-          <TableRowColumn colSpan="4" style={{ width: '500px', 'whiteSpace': 'normal' }}>
+          <TableRowColumn colSpan="4" style={{ width: '450px', 'whiteSpace': 'normal', paddingTop: '10px', paddingBottom: '10px' }}>
             <div className="impression">{this.props.impression}</div>
           </TableRowColumn>
           <TableRowColumn colSpan="3">
@@ -230,14 +231,37 @@ class Entry extends React.Component {
               readOnly
             />
           </TableRowColumn>
-          <TableRowColumn colSpan="3" style={{ textAlign: 'center' }}>
-            <UpdateBox impressionId={this.props.impressionId}
-                       date={this.props.date}
-                       impression={this.props.impression}
-                       rating={this.props.rating}
-                       updateUserEntries={this.props.updateUserEntries}
-                       getUserEntries={this.props.getUserEntries}
-                       deleteUserEntries={this.props.deleteUserEntries}/>
+          <TableRowColumn colSpan="1" style={{ textAlign: 'center', padding: '10px' }}>
+            {
+              this.state.confirmDeletionModalActive &&
+
+              (
+                <Dialog
+                    title="Confirm Removal"
+                    actions={[
+                      <FlatButton label="Cancel" primary={true}
+                        onClick={this.closeModals} />,
+                      <FlatButton label="Continue" primary={true}
+                        onClick={this.handleDelete} />
+                    ]}
+                    modal={false}
+                    open={this.state.confirmDeletionModalActive}
+                    onRequestClose={this.closeModals}
+                  >
+                    Confirm the deletion of this album
+               </Dialog>
+
+
+              )
+            }
+            <div className='btn-group' role="group">
+              <a className="remove" onClick={this.handleClickToDelete}>
+                <button className='remove btn btn-default'>
+                  {/* remove button */}
+                  <span className='glyphicon glyphicon-remove-circle'></span>
+                </button>
+              </a>
+            </div>
           </TableRowColumn>
         </TableRow>
 

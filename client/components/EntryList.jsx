@@ -82,22 +82,21 @@ class EntryList extends React.Component {
       <div className='container-list'>
         <Table
           height='auto'
-          width='75%'
-          fixedHeader
+          width='71%'
           >
           <TableHeader
             displaySelectAll={false}
             adjustForCheckbox={false}
           >
             <TableRow>
-              <TableHeaderColumn colSpan="1" >
-                <h3 className='glyphicon glyphicon-calendar'> </h3>
+              <TableHeaderColumn colSpan="1" style={{ width: '150px', 'paddingTop': '10px' }} >
+                <h4 className='glyphicon glyphicon-calendar'> </h4>
               </TableHeaderColumn>
-              <TableHeaderColumn colSpan="2" ><h3>Album</h3></TableHeaderColumn>
-              <TableHeaderColumn colSpan="2" ></TableHeaderColumn>
-              <TableHeaderColumn colSpan="4" ><h3>Impression</h3></TableHeaderColumn>
-              <TableHeaderColumn colSpan="3" ><h3>Rating</h3></TableHeaderColumn>
-              <TableHeaderColumn colSpan="3" ></TableHeaderColumn>
+              <TableHeaderColumn colSpan="2" style={{ width: '50px', padding: '0'}} ><h4>Album</h4></TableHeaderColumn>
+              <TableHeaderColumn colSpan="2" style={{width: '120px', paddingLeft: '5px'}} ></TableHeaderColumn>
+              <TableHeaderColumn colSpan="4" style={{width: '250px' }}><h4>Impression</h4></TableHeaderColumn>
+              <TableHeaderColumn colSpan="3" style={{width: '50px'}}><h4>Rating</h4></TableHeaderColumn>
+              <TableHeaderColumn colSpan="1" style={{textAlign: 'center', padding: '10px', width: '100px'}}></TableHeaderColumn>
             </TableRow>
           </TableHeader>
             <TableBody
@@ -142,6 +141,8 @@ class EntryList extends React.Component {
           activePage={this.state.currPage}
           onSelect={this.handleSelect}
         />
+      <br />
+      <br />
       </div>
     );
   }
